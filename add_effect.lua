@@ -9,7 +9,7 @@ function addNewSpellAndAlias(key, spell_name, short_name, alias_command, alias_f
     if alreadyExists ~= eAliasNotFound then
         DeleteAlias(alias_name)
     end
-    if (alias_flags == 129) then
+    if (alias_flags == aliasEnabledAndRegex) then
         AddAlias(alias_name, alias_command, "cast " .. string.lower(spell_name) .. " at %1", alias_flags, alias_script)
     else
         AddAlias(alias_name, alias_command, "cast " .. string.lower(spell_name), alias_flags, alias_script)

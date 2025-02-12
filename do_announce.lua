@@ -79,6 +79,10 @@ function setAway(shouldAway)
     is_away = shouldAway
     ColourNote("Grey", "Orange", "Away set to: " .. shouldAway)
 end
+function setInParty(inParty)
+    party_members = inParty > 0 or 0
+    ColourNote("Grey", "Orange", "Party members set to: " .. inParty)
+end
 
 ----
 --

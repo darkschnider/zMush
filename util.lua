@@ -129,3 +129,12 @@ function findIndex(t, value)
     end
     return nil
 end
+
+function findTableKeyByValue(table, value_to_find)
+    for key, value in pairs(table) do
+        if key == value_to_find then
+            return key
+        end
+    end
+    return nil
+end

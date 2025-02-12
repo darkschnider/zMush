@@ -335,6 +335,9 @@ end
 function Effects:addNewEffect(key, name, short_name, layers, groups, upMessage, downMessage)
     local newEffect = Effect:new(key, name, short_name, layers, groups)
     self:add(newEffect)
+    if not upMessage or not downMessage then
+        return
+    end
     local alreadyExists = GetTrigger("luaTrig"..short_name .."Up")
     if alreadyExists ~= eTriggerNotFound then
         DeleteTrigger("luaTrig"..short_name .."Up")
@@ -459,8 +462,8 @@ function Effects:forall(template, keys, online, offline)
         if result then
             found = true
             local options = {
-                d = "party",
-                x = true,
+                d = "default",
+                x = false,
                 c = result.color
             }
             do_announce(options, string.format(template, result.name, result.count, result.status))
@@ -469,12 +472,17 @@ function Effects:forall(template, keys, online, offline)
 
     if not found then
         local options = {
-            d = "party",
-            x = true,
+            d = "default",
+            x = false,
             c = "red"
         }
         do_announce(options, string.format(template, "None", "-", "-"))
     end
+end
+
+-- Add this function to the Effects class
+function Effects:find(key)
+    return self._effects[key] or nil
 end
 
 -- Global instance of the Effects class
@@ -496,13 +504,11 @@ function check_effects(sendToParty)
     --/python effects.inst.forall('/say -d"party" -x -c"%%(color)s" -- %%(name)-35s %%(count)10s %%(status)15s', keys='$(/escape ' %{effects_list})', online=True, offline=True)%; \
     --/say -d'party' -x -c'blue' -- --------------------------------------------------------------
     local options = {
-        d = "note",
+        d = "default",
         x = false,
         c = "blue"
     }
-    if sendToParty or false then
-        options.d = "party"
-    end
+
     -- effects_list here comes from the list of effects that the user wishes to have displayed as part of this command
     -- This is a list of effect or effect group keys. Either one works in this list
     -- for now, let's hard code this list to just true_unpain
@@ -512,6 +518,22 @@ function check_effects(sendToParty)
 end
 
 function addEffectToCheck(effect_key)
+    for _, key in ipairs(effects_list) do
+        if key == effect_key then
+            return -- Exit the function if the key already exists
+        end
+    end
+    table.insert(effects_list, effect_key) -- Add the key if it does not exist
 end
+
+function removeEffectToCheck(effect_key)
+    for i, key in ipairs(effects_list) do
+        if key == effect_key then
+            table.remove(effects_list, i)
+            break
+        end
+    end
+end
+
 -- Example usage contained within effect_definitions.lua
 return zEffects

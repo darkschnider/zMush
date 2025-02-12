@@ -1,4 +1,4 @@
-package.path = package.path .. ";C:\\MUSH Scripts\\?.lua"
+package.path = package.path .. ";C:\\zMush\\zMush\\?.lua"
 
 -- Globals!
 party_members=0
@@ -29,6 +29,7 @@ require "effect_definitions"
 
 require "bard"
 require "healer"
+require "abjurer"
 
 function test_alias(name, line, wildcards)
     require "tprint"

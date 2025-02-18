@@ -47,15 +47,15 @@ end
 
 function castVisu(name, line, wildcards)
     bard_visu_spell_name = wildcards[1]
-    print("bard_visu_spell_name: " .. bard_visu_spell_name)
+    --print("bard_visu_spell_name: " .. bard_visu_spell_name)
     visu = replace("'", "", replace(" ", "_", bard_visu_spell_name))
     bard_visu_id = "visu_" .. visu
-    print("bard_visu_id: " .. bard_visu_id)
+    --print("bard_visu_id: " .. bard_visu_id)
     Execute("cast visualize act at " .. bard_visu_spell_name .. " try very slow")
 end
 
 function visuOn()
-    print("Visu on: " .. bard_visu_spell_name .. "[" .. bard_visu_id .. "]")
+    --print("Visu on: " .. bard_visu_spell_name .. "[" .. bard_visu_id .. "]")
     if(zEffects:find(bard_visu_id) == nil) then
         zEffects:addNewEffect(bard_visu_id, "Visualize Act [".. bard_visu_spell_name .. "]", nil, 1, nil, nil, nil)
         addEffectToCheck(bard_visu_id)
@@ -69,7 +69,7 @@ function bard_visu_off(name, line, wildcards)
     local spell_name = wildcards[1]
     --print("Visu off: " .. visu)
     visu = "visu_" .. replace("'", "", replace(" ", "_", spell_name))
-    print("Visu off: " .. spell_name .. "[" .. visu .. "]")
+    --print("Visu off: " .. spell_name .. "[" .. visu .. "]")
     effect_off(visu)
 end
 
@@ -98,8 +98,120 @@ end
 --        Xecthae is invulnerable to magical.
 --        Xecthae is barely susceptible to electric.
 -- Xecthae is Demonic.
+local resist_map = {
+    ["completely vulnerable"] = 1,
+    ["very vulnerable"] = 2,
+    ["vulnerable"] = 3,
+    ["susceptible"] = 4,
+    ["somewhat susceptible"] = 5,
+    ["barely susceptible"] = 6,
+    ["immune"] = 7,
+    ["invulnerable"] = 8
+}
+--#if (@kya.12 = "very vulnerable") {kya.2 = @kya.2" COLD"} {}
+--#if (@kya.12 = "vulnerable") {kya.3 = @kya.3" COLD"} {}
+--#if (@kya.12 = "susceptible") {kya.4 = @kya.4" COLD"} {}
+--#if (@kya.12 = "somewhat susceptible") {kya.5 = @kya.5" COLD"} {}
+--#if (@kya.12 = "barely susceptible") {kya.6 = @kya.6" COLD"} {}
+--#if (@kya.12 = "immune") {kya.7 = @kya.7" COLD"} {}
+--#if (@kya.12 = "invulnerable") {kya.8 = @kya.8" COLD"} {}
 
 local trigFlags = 33 -- Enabled | RegularExpression
+casting_kya = false
+kya_stats = {
+    ["resist_most"] = "",
+    ["resist_least"] = "",
+    ["health"] = 0,
+    ["align"] = ""
+}
+kya_target = ""
+kya_target_resists = {}
+
+function kya_start(name, line, wildcards)
+    kya_target = wildcards[1]
+    --print("kya_target: " .. kya_target)
+    Execute("cast know your audience at " .. kya_target)
+    casting_kya = true
+end
+
+function kya_done(name, line, wildcards)
+    --print("kya_stats[\"align\"]: " .. kya_stats["align"])
+    if (casting_kya or false) then
+        kya_target = wildcards[1]
+        kya_stats["align"] = wildcards[2]
+        local options = {
+            d = "default",
+            x = false,
+            c = "blue"
+        }
+        do_announce(options, kya_target .. ": " .. kya_stats["health"] .. "% health, resists " .. kya_stats["resist_most"] .. " the MOST, " .. kya_stats["resist_least"] .. " the LEAST")
+        local resist_message = ""
+        --print ("kya_target_resists:")
+        --tprint(kya_target_resists)
+
+        for i, resist in pairs(kya_target_resists) do
+            --print("Checking resist: " .. i .. " at ")
+            --tprint(resist)
+            local type = resist[1]
+            local resist_amt = resist[2]
+            if (i ~= nil) then
+                if i == 1 then
+                    resist_message =  "Resists: "
+                end
+                resist_message = resist_message .. type .. "[" .. resist_amt .. "]"
+                if i < #kya_target_resists then
+                    resist_message = resist_message .. ", "
+                end
+            end
+        end
+        --trimmed = rTrimChars(resist_message, ", ")
+        do_announce(options, resist_message)
+        kya_target_resists = {}
+        casting_kya = false
+    end
+end
+
+function kya_add_resist(name, line, wildcards)
+    if casting_kya then
+        local resist_target = wildcards[1]
+        local resist = wildcards[2]
+        local resist_type = wildcards[3]
+        --print("kya_add_resist: " .. resist_target .. " resists " .. resist_type .. " at " .. resist)
+        local found_resist = nil
+        for key, value in pairs(resist_map) do
+            --print("Checking resist: " .. key .. " at " .. value)
+            if key == resist then
+                --print("kya_add_resist: " .. resist_target .. " resists " .. resist .. " at " .. value)
+                found_resist = value
+                break
+            end
+        end
+        if found_resist ~= nil then
+            --print("Adding resist: " .. resist .. " at " .. found_resist)
+            table.insert(kya_target_resists, {resist_type, found_resist})
+        else
+            error("Unknown resist: " .. resist)
+        end
+    else
+        error("Not casting kya")
+    end
+end
+
+DeleteAlias("luaKya")
+AddAlias("luaKya", "/kya (.*)", "", aliasEnabledAndRegex, "kya_start")
+--SetAliasOption("luaKya", "send_to", sendto.script)
+
+DeleteTrigger("luaKyaHealth")
+AddTriggerEx("luaKyaHealth", "^\\s+ The target is at about (\\d+)% health\\.$", "kya_stats[\"health\"] = %1", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+DeleteTrigger("luaKyaResistMost")
+AddTriggerEx("luaKyaResistMost", "^\\s+ resists the damage type (.*) the most\\.$", "kya_stats[\"resist_most\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+DeleteTrigger("luaKyaResistLeast")
+AddTriggerEx("luaKyaResistLeast", "^\\s+ resists the damage type (.*) the least\\.$", "kya_stats[\"resist_least\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+DeleteTrigger("luaKyaResists")
+AddTriggerEx("luaKyaResists", "^\\s+ ([\\w']+) is (.*) to (\\w+)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_add_resist", sendto.world, 100)
+DeleteTrigger("luaKyaDone")
+AddTriggerEx("luaKyaDone", "^([\\w']+) is (Demonic|Good|Angelic|Very Good|Extremely Good)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_done", sendto.world, 100)
+
 DeleteTrigger("luabard_songstart")
 DeleteTrigger("luaBardChaOff")
 DeleteTrigger("luaBardIntOff")

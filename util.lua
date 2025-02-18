@@ -138,3 +138,8 @@ function findTableKeyByValue(table, value_to_find)
     end
     return nil
 end
+
+function rTrimChars(str, chars)
+    local pattern = "^*(.-)[" .. chars .. "]*$"
+    return str:gsub(pattern, "%1")
+end

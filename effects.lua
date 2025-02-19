@@ -497,12 +497,9 @@ function effect_off(key)
     zEffects:off(key, quiet)
 end
 
-effects_list = {"beckon_darkness","unpain","brain_unpain","healing_smoke","regeneration"}
+effects_list = {"beckon_darkness","unpain","brain_unpain","healing_smoke","regeneration", "coin"}
 
 function check_effects(sendToParty)
-    --/say -d'party' -x -c'blue' -- --------------------------------------------------------------%; \
-    --/python effects.inst.forall('/say -d"party" -x -c"%%(color)s" -- %%(name)-35s %%(count)10s %%(status)15s', keys='$(/escape ' %{effects_list})', online=True, offline=True)%; \
-    --/say -d'party' -x -c'blue' -- --------------------------------------------------------------
     local options = {
         d = "default",
         x = false,

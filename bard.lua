@@ -14,7 +14,8 @@ local bard_songs = {
     ["WIS"] = "symphony of solomon",
     ["STR"] = "berserker's bravura",
     ["DEX"] = "aria of the eagles",
-    ["CON"] = "vigorous concerto"
+    ["CON"] = "vigorous concerto",
+    ["PSALM"] = "psalm of healing"
 }
 
 --zEffects:addNewEffect(key, spell_name, short_name, layers, groups, upMessage, downMessage)
@@ -24,6 +25,7 @@ zEffects:addNewEffect("CON", "Vigorous Concerto", nil, 1, nil, nil, nil)
 zEffects:addNewEffect("WIS", "Symphony of Solomon", nil, 1, nil, nil, nil)
 zEffects:addNewEffect("DEX", "Aria of the Eagles", nil, 1, nil, nil, nil)
 zEffects:addNewEffect("STR", "Berserker's Bravura", nil, 1, nil, nil, nil)
+zEffects:addNewEffect("PSALM", "Psalm of Healing", nil, 1, nil, nil, nil)
 
 bard_visu_id = ""
 bard_visu_spell_name = ""
@@ -40,7 +42,7 @@ function castBardSpell(spell_name)
 end
 
 function songSung()
-    print("Song sung: " .. lastBardSong)
+    --print("Song sung: " .. lastBardSong)
     effect_on(lastBardSong)
     lastBardSong = ""
 end
@@ -126,6 +128,7 @@ kya_stats = {
 }
 kya_target = ""
 kya_target_resists = {}
+kya_announce_target = "other"
 
 function kya_start(name, line, wildcards)
     kya_target = wildcards[1]
@@ -140,7 +143,7 @@ function kya_done(name, line, wildcards)
         kya_target = wildcards[1]
         kya_stats["align"] = wildcards[2]
         local options = {
-            d = "default",
+            d = kya_announce_target,
             x = false,
             c = "blue"
         }
@@ -210,7 +213,7 @@ AddTriggerEx("luaKyaResistLeast", "^\\s+ resists the damage type (.*) the least\
 DeleteTrigger("luaKyaResists")
 AddTriggerEx("luaKyaResists", "^\\s+ ([\\w']+) is (.*) to (\\w+)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_add_resist", sendto.world, 100)
 DeleteTrigger("luaKyaDone")
-AddTriggerEx("luaKyaDone", "^([\\w']+) is (Demonic|Good|Angelic|Very Good|Extremely Good)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_done", sendto.world, 100)
+AddTriggerEx("luaKyaDone", "^([\\w']+) is (Demonic|Evil|Good|Angelic|Very Good|Extremely Good)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_done", sendto.world, 100)
 
 DeleteTrigger("luabard_songstart")
 DeleteTrigger("luaBardChaOff")
@@ -219,6 +222,7 @@ DeleteTrigger("luaBardConOff")
 DeleteTrigger("luaBardWisOff")
 DeleteTrigger("luaBardDexOff")
 DeleteTrigger("luaBardStrOff")
+DeleteTrigger("luaBardPsalmOff")
 
 AddTriggerEx("luabard_songstart", "^You begin to sing, infusing your song with magic\\.$", "songSung()", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
 AddTriggerEx("luaBardChaOff", "^Your bario's bawdy ballad spell is no longer affecting your songs\\.$", "effect_off('CHA')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
@@ -227,6 +231,7 @@ AddTriggerEx("luaBardConOff", "^Your vigorous concerto spell is no longer affect
 AddTriggerEx("luaBardWisOff", "^Your symphony of solomon spell is no longer affecting your songs\\.$", "effect_off('WIS')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
 AddTriggerEx("luaBardDexOff", "^Your aria of the eagles spell is no longer affecting your songs\\.$", "effect_off('DEX')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
 AddTriggerEx("luaBardStrOff", "^Your berserker's bravura spell is no longer affecting your songs\\.$", "effect_off('STR')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
+AddTriggerEx("luaBardPsalmOff", "^Your psalm of healing spell is no longer affecting your songs\\.$", "effect_off('PSALM')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
 
 DeleteTrigger("luaBardVisuOff")
 AddTriggerEx("luaBardVisuOff", "^Your (.*) visu spell is no longer affecting your songs\\.$", "", trigFlags, custom_colour.Custom6, 0, "", "", sendto.world, 100)
@@ -244,9 +249,11 @@ AddAlias("luaAliasBardCon", "/con", "castBardSpell('CON')", aliasEnabled,"")
 AddAlias("luaAliasBardWis", "/wis", "castBardSpell('WIS')", aliasEnabled,"")
 AddAlias("luaAliasBardStr", "/str", "castBardSpell('STR')", aliasEnabled,"")
 AddAlias("luaAliasBardDex", "/dex", "castBardSpell('DEX')", aliasEnabled,"")
+AddAlias("luaAliasBardPsalm", "/psalm", "castBardSpell('PSALM')", aliasEnabled,"")
 SetAliasOption("luaAliasBardCha", "send_to", sendto.script)
 SetAliasOption("luaAliasBardInt", "send_to", sendto.script)
 SetAliasOption("luaAliasBardCon", "send_to", sendto.script)
 SetAliasOption("luaAliasBardWis", "send_to", sendto.script)
 SetAliasOption("luaAliasBardStr", "send_to", sendto.script)
 SetAliasOption("luaAliasBardDex", "send_to", sendto.script)
+SetAliasOption("luaAliasBardPsalm", "send_to", sendto.script)

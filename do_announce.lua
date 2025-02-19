@@ -41,7 +41,7 @@ announce_status_l = "-={ "
 announce_status_s = ""
 announce_status_r = " }=-"
 
-announce_other_command = "echo"
+announce_other_command = "waagh"
 
 if GetAlias("luaAliasAnnounce") ~= eAliasNotFound then
     DeleteAlias("luaAliasAnnounce")

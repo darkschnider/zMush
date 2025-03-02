@@ -247,10 +247,10 @@ function announce_effect(options)
     if report_effects then
         if strlen(opts.o) then
             --print(string.format("-c%s -f'%s %s%s%s' -- %s", color, status, effect_extra_l, escape(opts.o), effect_extra_r, opts.p))
-            do_announce({c = color, f = string.format("%s %s%s%s", status, effect_extra_l, opts.o, effect_extra_r), n = repeats, x = false}, opts.p .. " ")
+            do_announce({c = color, f = string.format("%s %s%s%s", status, effect_extra_l, opts.o, effect_extra_r), n = repeats, x = false, d = options.d}, opts.p .. " ")
         else
             --print(string.format("-c%s -f'%s' -- %s", color, status, opts.p))
-            do_announce({c = color, f = status, n = repeats, x = false}, opts.p .. " ")            
+            do_announce({c = color, f = status, n = repeats, x = false, d = options.d}, opts.p .. " ")            
         end
     else
         if strlen(opts.o) then

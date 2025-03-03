@@ -110,13 +110,6 @@ local resist_map = {
     ["immune"] = 7,
     ["invulnerable"] = 8
 }
---#if (@kya.12 = "very vulnerable") {kya.2 = @kya.2" COLD"} {}
---#if (@kya.12 = "vulnerable") {kya.3 = @kya.3" COLD"} {}
---#if (@kya.12 = "susceptible") {kya.4 = @kya.4" COLD"} {}
---#if (@kya.12 = "somewhat susceptible") {kya.5 = @kya.5" COLD"} {}
---#if (@kya.12 = "barely susceptible") {kya.6 = @kya.6" COLD"} {}
---#if (@kya.12 = "immune") {kya.7 = @kya.7" COLD"} {}
---#if (@kya.12 = "invulnerable") {kya.8 = @kya.8" COLD"} {}
 
 local trigFlags = 33 -- Enabled | RegularExpression
 casting_kya = false
@@ -167,8 +160,9 @@ function kya_done(name, line, wildcards)
                 end
             end
         end
-        --trimmed = rTrimChars(resist_message, ", ")
-        do_announce(options, resist_message)
+        if strlen(resist_message) then
+            do_announce(options, resist_message)
+        end
         kya_target_resists = {}
         casting_kya = false
     end
@@ -205,15 +199,15 @@ AddAlias("luaKya", "/kya (.*)", "", aliasEnabledAndRegex, "kya_start")
 --SetAliasOption("luaKya", "send_to", sendto.script)
 
 DeleteTrigger("luaKyaHealth")
-AddTriggerEx("luaKyaHealth", "^\\s+ The target is at about (\\d+)% health\\.$", "kya_stats[\"health\"] = %1", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+AddTriggerEx("luaKyaHealth", "^[\\w'\\s]+ The target is at about (\\d+)% health\\.$", "kya_stats[\"health\"] = %1", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
 DeleteTrigger("luaKyaResistMost")
-AddTriggerEx("luaKyaResistMost", "^\\s+ resists the damage type (.*) the most\\.$", "kya_stats[\"resist_most\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+AddTriggerEx("luaKyaResistMost", "^[\\w'\\s]+ resists the damage type (.*) the most\\.$", "kya_stats[\"resist_most\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
 DeleteTrigger("luaKyaResistLeast")
-AddTriggerEx("luaKyaResistLeast", "^\\s+ resists the damage type (.*) the least\\.$", "kya_stats[\"resist_least\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+AddTriggerEx("luaKyaResistLeast", "^[\\w'\\s]+ resists the damage type (.*) the least\\.$", "kya_stats[\"resist_least\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
 DeleteTrigger("luaKyaResists")
-AddTriggerEx("luaKyaResists", "^\\s+ ([\\w']+) is (.*) to (\\w+)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_add_resist", sendto.world, 100)
+AddTriggerEx("luaKyaResists", "^([\\w'\\s]+) is (.*) to (\\w+)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_add_resist", sendto.world, 100)
 DeleteTrigger("luaKyaDone")
-AddTriggerEx("luaKyaDone", "^([\\w']+) is (Demonic|Evil|Good|Angelic|Very Good|Extremely Good)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_done", sendto.world, 100)
+AddTriggerEx("luaKyaDone", "^([\\w'\\s]+) is (Demonic|Very evil|Extremely evil|Evil|Neutral|Good|Angelic|Very good|Extremely good)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_done", sendto.world, 100)
 
 DeleteTrigger("luabard_songstart")
 DeleteTrigger("luaBardChaOff")

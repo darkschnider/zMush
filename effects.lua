@@ -429,7 +429,7 @@ function Effects:last_duration(key)
 end
 
 -- Apply template for each effect that matches the search criteria
-function Effects:forall(template, keys, online, offline)
+function Effects:forall(template, keys, online, offline, sendToParty)
     online = online or true
     offline = offline or true
 
@@ -462,20 +462,26 @@ function Effects:forall(template, keys, online, offline)
         if result then
             found = true
             local options = {
-                d = "default",
+                d = "note",
                 x = false,
                 c = result.color
             }
+            if sendToParty then
+                options.d = "party"
+            end        
             do_announce(options, string.format(template, result.name, result.count, result.status))
         end
     end
 
     if not found then
         local options = {
-            d = "default",
+            d = "note",
             x = false,
             c = "red"
         }
+        if sendToParty then
+            options.d = "party"
+        end
         do_announce(options, string.format(template, "None", "-", "-"))
     end
 end
@@ -497,20 +503,23 @@ function effect_off(key)
     zEffects:off(key, quiet)
 end
 
+-- effects_list here comes from the list of effects that the user wishes to have displayed as part of this command
+-- This is a list of effect or effect group keys. Either one works in this list
 effects_list = {"beckon_darkness","unpain","brain_unpain","healing_smoke","regeneration", "coin"}
 
 function check_effects(sendToParty)
     local options = {
-        d = "default",
+        d = "note",
         x = false,
         c = "blue"
     }
 
-    -- effects_list here comes from the list of effects that the user wishes to have displayed as part of this command
-    -- This is a list of effect or effect group keys. Either one works in this list
-    -- for now, let's hard code this list to just true_unpain
+    if sendToParty then
+        options.d = "party"
+    end
+
     do_announce(options, "---------------------- Current effects -----------------------")
-    zEffects:forall("%-35s %10s %15s", effects_list, true, true)
+    zEffects:forall("%-35s %10s %15s", effects_list, true, true, sendToParty)
     do_announce(options, "--------------------------------------------------------------")
 end
 

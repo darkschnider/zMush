@@ -71,9 +71,9 @@ function Run:fixMovements(movements)
                         current.name = 'Unknown'
                     end
                     --Note("Setting name to: " .. current.name)
+                    previous.announce = string.format("[%s]. Next [%s]", previous.announce, current.name)
+                    --Note("Setting previous announce to: " .. previous.announce)
                 end
-                previous.announce = string.format("[%s]. Next [%s]", previous.announce, current.name)
-                --Note("Setting previous announce to: " .. previous.announce)
             elseif current.name ~= nil then
                 --print("Current room: " .. current.name)
             else
@@ -107,16 +107,8 @@ end
 
 -- Load movements from a config file
 function Run:loadMovementsFromConfigFile(config_file)
-    -- I don't know why but for some reason the file is not being found... we're going to hardcode the
-    -- path for now
-    local run_directory = "C:\\MUSH Scripts\\runs\\"
-    if not (io.open(run_directory .. config_file .. ".lua") or io.open(run_directory .. config_file .. ".luac")) then
-        error(string.format("Could not find file: %s [.lua or .luac]", config_file))
-        return false
-    end
-
     local path, basename = string.match(config_file, "(.-)([^\\/]-%.?([^%.\\/]*))$")
-    local movements = Run.loadMovementsListFromConfigFile(path, "runs." .. basename)
+    local movements = Run.loadMovementsListFromConfigFile(path, basename)
 
     if type(movements) ~= "table" then
         error("The FILE attribute is not a list: " .. type(movements))

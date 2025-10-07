@@ -1,0 +1,3 @@
+-- You bellow in rage and you must kill!
+-- You feel the red mist fading away.
+--

@@ -4,6 +4,10 @@ require "util"
 Effect = {}
 Effect.__index = Effect
 
+-- effects_list here comes from the list of effects that the user wishes to have displayed as part of this command
+-- This is a list of effect or effect group keys. Either one works in this list
+effects_list = {"beckon_darkness", "batform", "greater", "lesser", "holy_wisdom"}
+
 -- Constructor
 function Effect:new(key, name, short_name, layers, groups)
     local self = setmetatable({}, Effect)
@@ -502,10 +506,6 @@ function effect_off(key)
     local quiet = false
     zEffects:off(key, quiet)
 end
-
--- effects_list here comes from the list of effects that the user wishes to have displayed as part of this command
--- This is a list of effect or effect group keys. Either one works in this list
-effects_list = {"beckon_darkness","unpain","brain_unpain","healing_smoke","regeneration", "coin"}
 
 function check_effects(sendToParty)
     local options = {

@@ -135,6 +135,7 @@ function Movement:execute(announce_only)
         template = {
             a = self._announce,
             A = self._alignment,
+            bag = using_bag_of_holding or false,
             c = table.concat(self._commands, ";"),
             d = table.concat(self._path, ";"),
             e = self._eval,

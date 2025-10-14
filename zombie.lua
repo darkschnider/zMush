@@ -1,21 +1,5 @@
 package.path = package.path .. ";C:\\zMush\\zMush\\?.lua;C:\\zMush\\zMush\\runs\\?.lua"
 
--- Globals!
-party_members=0
-party_aide=""
-party_tank="neverwhere"
-party_commander="neverwhere"
-
-function setTank(name)
-    party_tank = name
-    ColourNote("Grey", "Orange", "Tank set to: " .. name)
-end
-
-function setCommander(name)
-    party_commander = name
-    ColourNote("Grey", "Orange", "Commander set to: " .. name)
-end
-
 require "util" -- Needs to be first!!
 require "align"
 require "math"
@@ -34,6 +18,31 @@ require "trader"
 require "goblin"
 require "death_knight"
 require "necromancer"
+
+-- Globals!
+party_members=0
+party_aide=""
+party_tank="neverwhere"
+party_commander="neverwhere"
+
+function setTank(name)
+    party_tank = name
+    ColourNote("Grey", "Orange", "Tank set to: " .. name)
+end
+
+function setCommander(name)
+    party_commander = name
+    ColourNote("Grey", "Orange", "Commander set to: " .. name)
+end
+
+function setTankAndCommander(name, line, wildcards)
+    local lower_name = string.lower(wildcards[1])
+    setTank(lower_name)
+    setCommander(lower_name)
+end
+
+DeleteTrigger("luaAutoTank")
+AddTriggerEx("luaAutoTank", "^You are joined to the party of (\\w+)\\.$", "", 33, custom_colour.Custom3, 0, "", "setTankAndCommander", sendto.script, 100)
 
 function test_alias(name, line, wildcards)
     require "tprint"

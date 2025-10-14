@@ -10,9 +10,9 @@ function addNewSpellAndAlias(key, spell_name, short_name, alias_command, alias_f
         DeleteAlias(alias_name)
     end
     if (alias_flags == aliasEnabledAndRegex) then
-        AddAlias(alias_name, alias_command, "cast " .. string.lower(spell_name) .. " at %1", alias_flags, alias_script)
+        AddAlias(alias_name, "^" .. alias_command, "cast " .. string.lower(spell_name) .. " at %1", alias_flags, alias_script)
     else
-        AddAlias(alias_name, alias_command, "cast " .. string.lower(spell_name), alias_flags, alias_script)
+        AddAlias(alias_name, "^" .. alias_command, "cast " .. string.lower(spell_name), alias_flags, alias_script)
     end
     --SetAliasOption(alias_name, "omit_from_command_history", "y")
     SetAliasOption(alias_name, "send_to", sendto.execute)

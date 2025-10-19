@@ -123,11 +123,33 @@ kya_target = ""
 kya_target_resists = {}
 kya_announce_target = "other"
 
+
+DeleteTrigger("luaKyaHealth")
+AddTriggerEx("luaKyaHealth", "^[\\w'\\s]+ The target is at about (\\d+)% health\\.$", "kya_stats[\"health\"] = %1", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaKyaHealth", "enabled", "n")
+DeleteTrigger("luaKyaResistMost")
+AddTriggerEx("luaKyaResistMost", "^[\\w'\\s]+ resists the damage type (.*) the most\\.$", "kya_stats[\"resist_most\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaKyaResistMost", "enabled", "n")
+DeleteTrigger("luaKyaResistLeast")
+AddTriggerEx("luaKyaResistLeast", "^[\\w'\\s]+ resists the damage type (.*) the least\\.$", "kya_stats[\"resist_least\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaKyaResistLeast", "enabled", "n")
+DeleteTrigger("luaKyaResists")
+AddTriggerEx("luaKyaResists", "^([\\w'\\s]+) is (.*) to (\\w+)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_add_resist", sendto.world, 100)
+SetTriggerOption("luaKyaResists", "enabled", "n")
+DeleteTrigger("luaKyaDone")
+AddTriggerEx("luaKyaDone", "^([\\w'\\s]+) is (Demonic|Very evil|Extremely evil|Evil|Neutral|Good|Angelic|Very good|Extremely good)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_done", sendto.world, 100)
+SetTriggerOption("luaKyaDone", "enabled", "n")
+
 function kya_start(name, line, wildcards)
     kya_target = wildcards[1]
     --print("kya_target: " .. kya_target)
     Execute("cast know your audience at " .. kya_target)
     casting_kya = true
+    SetTriggerOption("luaKyaHealth", "enabled", "y")
+    SetTriggerOption("luaKyaResistMost", "enabled", "y")
+    SetTriggerOption("luaKyaResistLeast", "enabled", "y")
+    SetTriggerOption("luaKyaResists", "enabled", "y")
+    SetTriggerOption("luaKyaDone", "enabled", "y")
 end
 
 function kya_done(name, line, wildcards)
@@ -165,6 +187,11 @@ function kya_done(name, line, wildcards)
         end
         kya_target_resists = {}
         casting_kya = false
+        SetTriggerOption("luaKyaHealth", "enabled", "n")
+        SetTriggerOption("luaKyaResistMost", "enabled", "n")
+        SetTriggerOption("luaKyaResistLeast", "enabled", "n")
+        SetTriggerOption("luaKyaResists", "enabled", "n")
+        SetTriggerOption("luaKyaDone", "enabled", "n")
     end
 end
 
@@ -197,17 +224,6 @@ end
 DeleteAlias("luaKya")
 AddAlias("luaKya", "/kya (.*)", "", aliasEnabledAndRegex, "kya_start")
 --SetAliasOption("luaKya", "send_to", sendto.script)
-
-DeleteTrigger("luaKyaHealth")
-AddTriggerEx("luaKyaHealth", "^[\\w'\\s]+ The target is at about (\\d+)% health\\.$", "kya_stats[\"health\"] = %1", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
-DeleteTrigger("luaKyaResistMost")
-AddTriggerEx("luaKyaResistMost", "^[\\w'\\s]+ resists the damage type (.*) the most\\.$", "kya_stats[\"resist_most\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
-DeleteTrigger("luaKyaResistLeast")
-AddTriggerEx("luaKyaResistLeast", "^[\\w'\\s]+ resists the damage type (.*) the least\\.$", "kya_stats[\"resist_least\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
-DeleteTrigger("luaKyaResists")
-AddTriggerEx("luaKyaResists", "^([\\w'\\s]+) is (.*) to (\\w+)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_add_resist", sendto.world, 100)
-DeleteTrigger("luaKyaDone")
-AddTriggerEx("luaKyaDone", "^([\\w'\\s]+) is (Demonic|Very evil|Extremely evil|Evil|Neutral|Good|Angelic|Very good|Extremely good)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_done", sendto.world, 100)
 
 DeleteTrigger("luabard_songstart")
 DeleteTrigger("luaBardChaOff")

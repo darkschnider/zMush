@@ -6,7 +6,9 @@ Effect.__index = Effect
 
 -- effects_list here comes from the list of effects that the user wishes to have displayed as part of this command
 -- This is a list of effect or effect group keys. Either one works in this list
-effects_list = {"beckon_darkness", "batform", "greater", "lesser", "holy_wisdom", "unpain", "brain_unpain", "stun"}
+--
+-- Avoid modifying this list directly. Instead, use the addEffectToCheck and removeEffectToCheck functions from child scripts
+effects_list = {"greater", "lesser", "unpain", "brain_unpain", "stun"}
 
 -- Constructor
 function Effect:new(key, name, short_name, layers, groups)

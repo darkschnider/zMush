@@ -198,7 +198,8 @@ function run_path(options)
     end
 
     if strlen(options.t) then
-        Send("alias _target ", options.t)
+        SetVariable("target", options.t)
+        --Send("alias _target ", options.t)
         --print("area_target " .. options.t)
         if options.scan_target then
             Send("look at " .. options.t)

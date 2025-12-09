@@ -10,6 +10,7 @@ require "do_announce"
 require "run"
 zEffects = require "effects"
 require "effect_definitions"
+require "attack"
 
 require "bard"
 require "healer"
@@ -18,6 +19,7 @@ require "trader"
 require "goblin"
 require "death_knight"
 require "necromancer"
+require "ranger"
 
 -- Globals!
 party_members=0
@@ -139,5 +141,26 @@ end
 --  @update_status
 
 function doLoot(name, line, wildcards)
+    servant = GetVariable("use_servant")
+    if servant == "1" then
+        Send("scom loot")
+    else
+        loot_to_bag = using_bag_of_holding or false
+        have_carriage = GetVariable("have_carriage")
+        Send("loot")
+        if loot_to_bag then
+            Send("put noeq in bag")
+        end
+        if have_carriage == "1" then
+            Send("take corpse;put corpse in carriage")
+        end
+    end
+end
+
+function on_connected()
+
+end
+
+function on_save()
 
 end

@@ -10,11 +10,13 @@ end
 
 function me(user)
     -- TODO: Replace with fetching the username from world properties, once I know how to do that...
-    return user ~= nil and #user > 0 and user == "neverwhere"
+    return user ~= nil and #user > 0 and user == GetVariable("player_name") or ""
 end
 
-function is_me(user)
-    return user ~= nil and #user > 0 and me(user)
+-- Helper function to check if a name matches the player
+function is_me(name)
+    local player_name = GetVariable("player_name") or ""
+    return name:lower() == player_name:lower()
 end
 
 function strlen(value)
@@ -142,4 +144,33 @@ end
 function rTrimChars(str, chars)
     local pattern = "^*(.-)[" .. chars .. "]*$"
     return str:gsub(pattern, "%1")
+end
+
+----
+-- Trim whitespace from both ends of a string
+--
+-- @param str The string to trim
+-- @return The trimmed string
+----
+function trim(str)
+    if not str then return "" end
+    return str:match("^%s*(.-)%s*$")
+end
+
+----
+-- Sanitize a string for use as an effect key
+-- Converts to lowercase, replaces spaces with underscores, removes special characters
+--
+-- @param str The string to sanitize
+-- @return The sanitized string
+----
+function sanitize(str)
+    if not str then return "" end
+    -- Convert to lowercase
+    str = str:lower()
+    -- Replace spaces with underscores
+    str = str:gsub("%s+", "_")
+    -- Remove apostrophes and other special characters (keep only alphanumeric and underscores)
+    str = str:gsub("[^%w_]", "")
+    return str
 end

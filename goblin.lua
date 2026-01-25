@@ -2,6 +2,8 @@ zEffects = require "effects"
 require("add_effect")
 local trigFlags = 33 -- Enabled | RegularExpression
 
+DeleteAliasGroup("Goblin LUA Aliases")
+
 local shop_items = {}
 local total_price = 0
 local found_item_count = 0
@@ -54,6 +56,8 @@ end
 DeleteTrigger("luaListEnd")
 DeleteTrigger("luaStoreItem")
 DeleteAlias("luaGoblinShopList")
-AddAlias("luaGoblinShopList", "/glist", "", aliasEnabled, "goblinShopList")
+AddAlias("luaGoblinShopList", "^/glist$", "", aliasEnabledAndRegex, "goblinShopList")
 DeleteAlias("luaGoblinShopBuy")
-AddAlias("luaGoblinShopBuy", "/gbuy", "", aliasEnabled, "goblinShopBuy")
+AddAlias("luaGoblinShopBuy", "^/gbuy$", "", aliasEnabledAndRegex, "goblinShopBuy")
+SetAliasOption("luaGoblinShopList", "group", "Goblin LUA Aliases")
+SetAliasOption("luaGoblinShopBuy", "group", "Goblin LUA Aliases")

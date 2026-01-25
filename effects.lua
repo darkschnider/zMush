@@ -350,8 +350,14 @@ function Effects:addNewEffect(key, name, short_name, layers, groups, upMessage, 
         DeleteTrigger("luaTrig"..short_name .."Down")
     end
     local trigFlags = 33 -- Enabled | RegularExpression
-    AddTriggerEx("luaTrig"..short_name .."Up", "^"..upMessage.."$", "effect_on(\"" .. key .. "\")", trigFlags, custom_colour.Custom3, 0, "", "", 12, 100)
-    AddTriggerEx("luaTrig"..short_name .. "Down", "^"..downMessage.."$", "effect_off(\"" .. key .. "\")", trigFlags, custom_colour.Custom6, 0, "", "", 12, 100)
+    if (#upMessage > 0) then
+        AddTriggerEx("luaTrig"..short_name .."Up", "^"..upMessage.."$", "effect_on(\"" .. key .. "\")", trigFlags, custom_colour.Custom3, 0, "", "", 12, 100)
+        SetTriggerOption("luaTrig"..short_name .."Up", "group", "Effect Definitions")
+    end
+    if (#downMessage > 0) then
+        AddTriggerEx("luaTrig"..short_name .. "Down", "^"..downMessage.."$", "effect_off(\"" .. key .. "\")", trigFlags, custom_colour.Custom6, 0, "", "", 12, 100)
+        SetTriggerOption("luaTrig"..short_name .."Down", "group", "Effect Definitions")
+    end
 end
 
 -- Remove an effect group
@@ -435,9 +441,10 @@ function Effects:last_duration(key)
 end
 
 -- Apply template for each effect that matches the search criteria
-function Effects:forall(template, keys, online, offline, sendToParty)
+function Effects:forall(template, keys, online, offline, sendToParty, omit_offline)
     online = online or true
     offline = offline or true
+    omit_offline = omit_offline or false
 
     if not template then
         return
@@ -451,7 +458,7 @@ function Effects:forall(template, keys, online, offline, sendToParty)
         table.sort(effects, function(a, b) return a:get_name() < b:get_name() end)
     else
         if type(keys) == "string" then
-            keys = util.split(keys, " ")
+            keys = split(keys, " ")
         end
         for _, key in ipairs(keys) do
             if self._effect_groups[key] then
@@ -465,7 +472,7 @@ function Effects:forall(template, keys, online, offline, sendToParty)
     local found = false
     for _, effect in ipairs(effects) do
         local result = effect:stateDict(online, offline)
-        if result then
+        if result and (not omit_offline or result.status ~= "OFF") then
             found = true
             local options = {
                 d = "note",

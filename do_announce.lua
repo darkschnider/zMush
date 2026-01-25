@@ -30,7 +30,7 @@ announce_think_s = ""
 announce_think_r = ""
 
 announce_party_l = "-={ "
-announce_party_s = ""
+announce_party_s = " --> "
 announce_party_r = " }=-"
 
 announce_other_l = ""
@@ -38,7 +38,7 @@ announce_other_s = ""
 announce_other_r = ""
 
 announce_status_l = "-={ "
-announce_status_s = ""
+announce_status_s = " --> "
 announce_status_r = " }=-"
 
 announce_other_command = "waagh"
@@ -202,12 +202,12 @@ function do_announce(options, message)
     if not opts.x then
         local _cmd = ""
         if strlen(opts.f) then
-            _cmd = announce_status_l .. message .. announce_say_s .. opts.f .. announce_status_r
+            _cmd = announce_status_l .. message .. announce_status_s .. opts.f .. announce_status_r
         else
             _cmd = announce_status_l .. message .. announce_status_r
         end
         for i = 1, (opts.n or 1) do
-            ColourNote("white", opts.c, _cmd)
+            ColourNote("white", opts.c or "", _cmd)
         end
     end
 end

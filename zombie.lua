@@ -27,13 +27,21 @@ party_aide=""
 party_tank="neverwhere"
 party_commander="neverwhere"
 
+SetVariable("player_name", "neverwhere")
+SetVariable("party_tank", party_tank)
+SetVariable("party_commander", party_commander)
+SetVariable("target", "")
+SetVariable("healing", party_tank)
+
 function setTank(name)
     party_tank = name
+    SetVariable("party_tank", party_tank)
     ColourNote("Grey", "Orange", "Tank set to: " .. name)
 end
 
 function setCommander(name)
     party_commander = name
+    SetVariable("party_commander", party_commander)
     ColourNote("Grey", "Orange", "Commander set to: " .. name)
 end
 
@@ -55,6 +63,19 @@ end	-- of test_alias
 _currentRun = {}
 local trigFlags = 33 -- Enabled | RegularExpression
 status_prompt = 0
+
+-- Helper function to interpolate color from green (100% HP) to red (0% HP)
+function hpColor(current, max)
+    local percentage = current / max
+    if percentage > 1 then percentage = 1 end
+    if percentage < 0 then percentage = 0 end
+    
+    local r = math.floor(255 * (1 - percentage))
+    local g = math.floor(255 * percentage)
+    
+    return string.format("#%02X%02X00", r, g)
+end
+
 luaPrompt = {
     ["p_hp"] = 0,
     ["p_maxhp"] = 0,
@@ -70,7 +91,11 @@ luaPrompt = {
     ["p_party"] = 0
 }
 
+
 function updatePrompt(name, line, wildcards)
+    --InfoClear()
+    --Note("Updating prompt...")
+    --tprint(wildcards)
     luaPrompt["p_hp"] = wildcards[1]
     luaPrompt["p_maxhp"] = wildcards[2]
     luaPrompt["p_sp"] = wildcards[3]
@@ -88,57 +113,33 @@ function updatePrompt(name, line, wildcards)
     luaPrompt["p_align"] = wildcards[11]
     luaPrompt["p_party"] = wildcards[12]
 
+    --tprint(luaPrompt)
+    local scan_color = "#FFFFFF"
+    local xp_change = ""
+    if tonumber(luaPrompt["p_last_exp"]) >= 0 then
+        xp_change = "(+" .. luaPrompt["p_last_exp"] .. ")"
+    elseif tonumber(luaPrompt["p_last_exp"]) < 0 then
+        xp_change = "(" .. luaPrompt["p_last_exp"] .. ")"
+    end
+    --Info(luaPrompt["p_hp"] .. "/" .. luaPrompt["p_maxhp"] .. " HP, " .. luaPrompt["p_sp"] .. "/" .. luaPrompt["p_maxsp"] .. " SP, " .. luaPrompt["p_exp"] .. " EXP " .. xp_change .. ", " .. luaPrompt["p_cash"] .. " Cash")
+    Simulate(luaPrompt["p_scan"])
+    local hp_color = hpColor(tonumber(luaPrompt["p_hp"]), tonumber(luaPrompt["p_maxhp"]))
+    ColourTell(hp_color, "#000000", luaPrompt["p_hp"])
+    ColourTell("#C5C5C5", "#000000", "/" )
+    ColourTell("#FFFFFF", "#000000", luaPrompt["p_maxhp"])
+    ColourTell("#C5C5C5", "#000000", " HP, ")
+    local sp_color = hpColor(tonumber(luaPrompt["p_sp"]), tonumber(luaPrompt["p_maxsp"]))
+    ColourTell(sp_color, "#000000", luaPrompt["p_sp"])
+    ColourTell("#C5C5C5", "#000000", "/")
+    ColourTell("#FFFFFF", "#000000", luaPrompt["p_maxsp"])
+    ColourTell("#C5C5C5", "#000000", " SP")
+    Note("")
+    ColourTell("#C5C5C5", "#000000", luaPrompt["p_exp"] .. " EXP " .. xp_change .. ", " .. luaPrompt["p_cash"] .. " Gold" .."> ")
 end
 
---DeleteTrigger("luaPromptMatch")
---AddTriggerEx("luaPromptMatch", "^p: (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) \"([^\"]*)\" \"([^\"]*)\" (.*)$", "", trigFlags, custom_colour.Custom3, 0, "", "updatePrompt", sendto.world, 100)
-
---/def -Fp5 -agL -mregexp -t'^p: (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) "([^"]*)" "([^"]*)" (.*)$' update_prompt = \
---  /set status_prompt=1%; \
---  /set p_hp=%{P1}%; \
---  /set p_maxhp=%{P2}%; \
---  /set p_sp=%{P3}%; \
---  /set p_maxsp=%{P4}%; \
---  /set p_exp=%{P5}%; \
---  /set p_cash=%{P6}%; \
---  /let _rooms=$[{P7} - p_expl]%; \
---  /if (_rooms) \
---    /say -- Found %{_rooms} New Room$[_rooms == 1 ? '' : 's']%; \
---  /endif%; \
---  /set p_expl=%{P7}%; \
---  /set p_wgt=%{P8}%; \
---  /set p_last_exp=%{P9}%; \
---  /set p_scan=%{P10}%; \
---  /set p_align=$[align({P11})]%; \
---  /set p_party=%{P12}%; \
---  /if (regmatch('^([A-Za-z\' -]+) is in (good shape)$$', p_scan)) \
---    /update_target_scan -t'$(/escape ' %{P1})' -s${scan_good_shape} -d'$(/escape ' $[toupper({P2})])'%; \
---  /elseif (regmatch('^([A-Za-z\' -]+) is (slightly hurt)$$', p_scan)) \
---    /update_target_scan -t'$(/escape ' %{P1})' -s${scan_slightly_hurt} -d'$(/escape ' $[toupper({P2})])'%; \
---  /elseif (regmatch('^([A-Za-z\' -]+) is (moderately hurt)$$', p_scan)) \
---    /update_target_scan -t'$(/escape ' %{P1})' -s${scan_moderately_hurt} -d'$(/escape ' $[toupper({P2})])'%; \
---  /elseif (regmatch('^([A-Za-z\' -]+) is (not in a good shape)$$', p_scan)) \
---    /update_target_scan -t'$(/escape ' %{P1})' -s${scan_not_in_a_good_shape} -d'$(/escape ' $[toupper({P2})])'%; \
---  /elseif (regmatch('^([A-Za-z\' -]+) is in (bad shape)$$', p_scan)) \
---    /update_target_scan -t'$(/escape ' %{P1})' -s${scan_bad_shape} -d'$(/escape ' $[toupper({P2})])'%; \
---  /elseif (regmatch('^([A-Za-z\' -]+) is in (very bad shape)$$', p_scan)) \
---    /update_target_scan -t'$(/escape ' %{P1})' -s${scan_very_bad_shape} -d'$(/escape ' $[toupper({P2})])'%; \
---  /elseif (regmatch('^([A-Za-z\' -]+) is (almost DEAD)$$', p_scan)) \
---    /update_target_scan -t'$(/escape ' %{P1})' -s${scan_almost_dead} -d'$(/escape ' $[toupper({P2})])'%; \
---  /elseif (regmatch('^([A-Za-z\' -]+) is (DEAD MEAT)!$$', p_scan)) \
---    /update_target_scan -t'$(/escape ' %{P1})' -s${scan_dead_meat} -d'$(/escape ' $[toupper({P2})])'%; \
---  /endif%; \
---  /if (!strlen(aide) | !is_me(aide)) \
---    /if (regmatch('^@?<(\\d*)>$$', p_party)) \
---      /set party_members=$[strlen({P1})]%; \
---    /else \
---      /set party_members=0%; \
---    /endif%; \
---    /if (party_members < 2) \
---      /test tank := me()%; \
---    /endif%; \
---  /endif%; \
---  @update_status
+DeleteTrigger("luaPromptMatch")
+AddTriggerEx("luaPromptMatch", "^p: (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) (-?\\d+) ([-\\d]+) \"([^\"]*)\" \"([^\"]*)\" (.*)$", "", trigFlags, custom_colour.Custom3, 0, "", "updatePrompt", sendto.world, 100)
+SetTriggerOption("luaPromptMatch", "omit_from_output", true)
 
 function doLoot(name, line, wildcards)
     servant = GetVariable("use_servant")

@@ -106,7 +106,7 @@ local weapon_skills = {
 function ranger_mastery_print(name, line, wildcards)
     local level = GetTriggerOption(name, "user")
     ColourTell("#C5C5C5", "#000000", line .." ")
-    ColourTell("green", "black", "[" .. level .. " of 20]")
+    ColourTell("cyan", "black", "[" .. level .. " of 20]")
     Note("")
 end
 
@@ -243,12 +243,25 @@ for i, bm_skill in ipairs(beastmastery_skills) do
     SetTriggerOption(bm_trigger_name, "group", "Ranger LUA Triggers")
 end
 
-addNewSpellAndAlias("eyes_marksman", "Eyes of the Marksman", "eom", "/eom", aliasEnabledAndRegex, "", 1, nil,
- "Your eyes flash in silky colours\\.",
- "You feel a pinch in your eyes\\.")
 addEffectToCheck("eyes_marksman")
-
-addNewSpellAndAlias("spirit_of_nature", "Spirit of Nature", "son", "/son", aliasEnabledAndRegex, "", 1, nil,
- "You feel {strong|nimble|tough} as {a|an} {bear|eagle|drake} as the spirit of the {forest|mountain|desert} strenghtens you!",
- "You suddenly feel cold as the presence leaves your body\\.")
 addEffectToCheck("spirit_of_nature")
+
+function do_beastspeak(what_to_say)
+    Send("speak beastspeak")
+    Send("say " .. what_to_say)
+    Send("speak common")
+end
+
+DeleteTrigger("luaPetSummoned")
+AddTriggerEx("luaPetSummoned", "^The (cat|wolf|bear|drake|eagle) nods friendly at you\\.$",
+ "do_beastspeak('follow me')", trigFlags, -1, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaPetSummoned", "group", "Ranger LUA Triggers")
+
+DeleteTrigger("luaBrokenArrow")
+AddTriggerEx("luaBrokenArrow", "^Your arrow breaks on impact\\.$", "", trigFlags, custom_colour.Custom16, 0, "", "", sendto.world, 100)
+SetTriggerOption("luaBrokenArrow", "group", "Ranger LUA Triggers")
+
+addNewAlias("foraging", "forage", "/forage", aliasEnabled, nil, false)
+SetAliasOption("foraging", "group", "Ranger LUA Aliases")
+addNewAlias("fire building", "fire_building", "/fb", aliasEnabled, nil, false)
+SetAliasOption("fire_building", "group", "Ranger LUA Aliases")

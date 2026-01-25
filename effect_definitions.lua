@@ -19,8 +19,8 @@ zEffects:addNewGroup("lesser", "Lesser")
 zEffects:addNewGroup("skin", "Skin")
 
 -- Stun Protection Group
-zEffects:addNewEffect("stun_resistance", "Stun Resistance", "SR", 1, "stun", "^Neverwhere wobbles around a bit\\.$", "Your stun resistance wears off\\.")
-zEffects:addNewEffect("iron_will", "Iron Will", "IW", 1, "stun", "^[A-Z][a-z]+ stares deep into your eyes, bolstering your concentration greatly\\.$|^You turn your mind inwards, enchanting yourself with an aura of rigid concentration\\.$", "Your Iron Will wears off\\.")
+zEffects:addNewEffect("stun_resistance", "Stun Resistance", "SR", 1, "stun", "Neverwhere wobbles around a bit\\.", "Your stun resistance wears off\\.")
+zEffects:addNewEffect("iron_will", "Iron Will", "IW", 1, "stun", "[A-Z][a-z]+ stares deep into your eyes, bolstering your concentration greatly\\.$|^You turn your mind inwards, enchanting yourself with an aura of rigid concentration\\.", "Your Iron Will wears off\\.")
 
 -- Flight
 zEffects:addNewEffect("flight", "Flight", "flight", 1, nil, "You become lighter than the air, wow you feel like you could fly!", "You feel a bit heavier\\.")
@@ -32,7 +32,7 @@ zEffects:addNewEffect("harmony_armour", "Harmony Armour", "HA", 1, nil, "You fee
 
 -- Mind Protection
 zEffects:addNewEffect("barrier_of_the_mind", "Barrier of the Mind", "barrier_of_the_mind", 1, nil, "You feel as if a protective barrier surrounds your fragile mind\\.", "You feel a slight tingle somewhere deep inside your mind\\.")
-zEffects:addNewEffect("force_shield", "Force Shield", "FS", 1, nil, "^[A-Z][a-z]+ surrounds you with a telekinetic shield of force\\.$", "The force shield dissipates\\.")
+zEffects:addNewEffect("force_shield", "Force Shield", "FS", 1, nil, "[A-Z][a-z]+ surrounds you with a telekinetic shield of force\\.", "The force shield dissipates\\.")
 
 -- Unpain Group
 zEffects:addNewEffect("minor_unpain", "Minor Unpain", "MUP", 1, "unpain", "You feel more sturdy\\.", "You feel a little like crap\\.")
@@ -48,7 +48,7 @@ zEffects:addNewEffect("call_for_ice", "Call for Ice", "call_for_ice", 1, "monk_p
 zEffects:addNewEffect("adrenaline_rush", "Adrenaline Rush", "adrenaline_rush", 1, nil, "You are bursting with energy!!!", "Exhaustion washes over you as the adrenaline begins to leave your bloodstream\\.\\.")
 zEffects:addNewEffect("berserk", "Berserk", "berserk", 1, nil, "You bellow in rage and you must kill!", "You come out of your berserk!")
 zEffects:addNewEffect("combat_trance", "Combat Trance", "combat_trance", 1, nil, "Your movements are now more focused and your mind is calm\\.", "You lose your concentration and fight with less precision\\.")
-zEffects:addNewEffect("energy_hauberk", "Energy Hauberk", "EH", 1, nil, "^With a flash a shining hauberk of pure energy encases you\\.$|^hauberk around yourself\\.$", "The energy surrounding your body dwindles away\\.")
+zEffects:addNewEffect("energy_hauberk", "Energy Hauberk", "EH", 1, nil, "With a flash a shining hauberk of pure energy encases you\\.$|^hauberk around yourself\\.", "The energy surrounding your body dwindles away\\.")
 zEffects:addNewEffect("inner_power", "Inner Power", "IP", 1, nil, "You feel inner strength increasing\\.", "You feel your inner power decreasing\\.")
 
 -- Image/Vision Spells
@@ -64,7 +64,7 @@ zEffects:addNewEffect("healing_smoke", "Healing Smoke", "healing_smoke", 1, nil,
 zEffects:addNewEffect("heavy_weight", "Heavy Weight", "heavy_weight", 1, nil, "You feel magically heavier\\.", "You feel lighter\\.")
 
 -- Debuffs
-zEffects:addNewEffect("blind", "Blind", "blind", 1, nil, "^[A-Za-z,-:\\' ]+ blinds you\\.$", "You are able to see again\\.")
+zEffects:addNewEffect("blind", "Blind", "blind", 1, nil, "[A-Za-z,-:\\' ]+ blinds you\\.", "You are able to see again\\.")
 zEffects:addNewEffect("wall_of_steel", "Wall of Steel", "wall_of_steel", 1, nil, "You lift up your shield\\.", "Your hand starts to ache, forcing you to lower your shield\\.|Your offensive maneuver proves out more demanding than you thought")
 
 -- Blade Enchant Group
@@ -89,7 +89,7 @@ SetTriggerOption("neutralize_blade", "group", "Effect Definitions")
 zEffects:addNewEffect("slow_person", "Slow Person", "slow_person", 1, nil, "You feel like lagged\\.", "You no longer feel lagged\\.")
 zEffects:addNewEffect("glue", "Glue", "glue", 1, nil, "Your feet are covered with slimy matter\\.", "You can move again\\.")
 zEffects:addNewEffect("see_magic", "See Magic", "see_magic", 1, nil, "Your vision seems more sensitive\\.", "Your vision feels less sensitive\\.")
-zEffects:addNewEffect("shadow_shield", "Shadow Shield", "shadow_shield", 1, nil, "^[A-Z][a-z]+ draws a protective circle in the air and shadows cover your body\\.$|You draw a protective circle in the air around yourself and shadows", "The shadows lift from your body\\.")
+zEffects:addNewEffect("shadow_shield", "Shadow Shield", "shadow_shield", 1, nil, "[A-Z][a-z]+ draws a protective circle in the air and shadows cover your body\\.$|You draw a protective circle in the air around yourself and shadows", "The shadows lift from your body\\.")
 zEffects:addNewEffect("summon_orb_of_reflection", "Orb of Reflection", "summon_orb_of_reflection", 1, nil, "An orb of reflection appears in the room\\.", "You banish the orb back to chaos-continuum\\.")
 
 -- Magical Movement
@@ -99,18 +99,18 @@ zEffects:addNewEffect("sspirit", "Inner Spirit", "sspirit", 1, nil, "You open yo
 -- Combat States
 zEffects:addNewEffect("kamikaze", "Kamikaze", "kamikaze", 1, nil, "You start your Kamikaze attack!", "You calm down\\.")
 zEffects:addNewEffect("forget", "Forget", "forget", 1, nil, "You feel stoopid\\.|Lich assaults your mind, you feel excruciating pain\\.", "For some reason or another\\.\\. you feel smarter\\.")
-zEffects:addNewEffect("poison", "Poison", "poison", 1, nil, "You shiver and suffer as the POISON takes effect!", "^[A-Z][a-z]+ neutralizes the poison in your veins\\.$")
+zEffects:addNewEffect("poison", "Poison", "poison", 1, nil, "You shiver and suffer as the POISON takes effect!", "[A-Z][a-z]+ neutralizes the poison in your veins\\.")
 
 -- Water Spells
-zEffects:addNewEffect("water_breathing", "Water Breathing", "wb", 1, nil, "^[A-Z][a-z]+ puts a protective blue aura around your head\\.$|You put a protective blue aura around your head\\.$", "You are no longer able to breathe underwater\\.")
-zEffects:addNewEffect("water_walking", "Water Walking", "ww", 1, nil, "^([A-Z][a-z]+) looks a bit different\\.$|^You give ([A-Z][a-z]+) an ability to avoid water\\.$", "You feel heavy\\.")
+zEffects:addNewEffect("water_breathing", "Water Breathing", "wb", 1, nil, "[A-Z][a-z]+ puts a protective blue aura around your head\\.$|You put a protective blue aura around your head\\.", "You are no longer able to breathe underwater\\.")
+zEffects:addNewEffect("water_walking", "Water Walking", "ww", 1, nil, "([A-Z][a-z]+) looks a bit different\\.$|^You give ([A-Z][a-z]+) an ability to avoid water\\.", "You feel heavy\\.")
 
 -- Nature Spells
 zEffects:addNewEffect("spirit_of_nature", "Spirit of Nature", "spirit_of_nature", 1, nil, "You feel (strong|nimble|tough) as (a|an) (bear|eagle|drake) as the spirit of the (forest|mountain|desert) strenghtens you!", "You suddenly feel cold as the presence leaves your body\\.")
 zEffects:addNewEffect("eyes_of_the_marksman", "Eyes of the Marksman", "eyes_of_the_marksman", 1, nil, "Your eyes flash in silky colours\\.", "You feel a pinch in your eyes\\.")
 
 -- Invisibility/Transformation
-zEffects:addNewEffect("invisibility", "Invisibility", "invisibility", 1, nil, "^You turn invisible[.!]$|Your true mastery allows you to turn invisible!", "You turn visible again\\.")
+zEffects:addNewEffect("invisibility", "Invisibility", "invisibility", 1, nil, "You turn invisible[.!]$|Your true mastery allows you to turn invisible!", "You turn visible again\\.")
 zEffects:addNewEffect("transformation", "Transformation", "transformation", 1, nil, "You shriek in pain as your entire body begins to transform!", "With a violent convulsion, you return to your normal form\\.")
 
 -- Elixirs
@@ -144,10 +144,10 @@ zEffects:addNewEffect("mind_linked", "Mind Linked", "mind_linked", 1, nil, "You 
 zEffects:addNewEffect("lions_heart", "Lion's Heart", "lions_heart", 1, nil, "Your heart is that of a Lion!", "The Courage of the Lion leaves you\\.")
 
 -- Greater Shield Group
-zEffects:addNewEffect("greater_elemental_shield", "Greater Elem Shield", "GES", 1, "greater_shield", "^An elemental shelter protecting Mortem materializes\\.$", "^Mortem flashes brightly as energy escapes it\\.$")
+zEffects:addNewEffect("greater_elemental_shield", "Greater Elem Shield", "GES", 1, "greater_shield", "An elemental shelter protecting Mortem materializes\\.", "Mortem flashes brightly as energy escapes it\\.")
 
 -- Lesser Shield Group
-zEffects:addNewEffect("lesser_magical_shield", "Lesser Mag Shield", "LMS", 1, "lesser_shield", "^A magical shield protecting Mortem materializes\\.$", "^Mortem twinkles softly as energy escapes it\\.$")
+zEffects:addNewEffect("lesser_magical_shield", "Lesser Mag Shield", "LMS", 1, "lesser_shield", "A magical shield protecting Mortem materializes\\.", "Mortem twinkles softly as energy escapes it\\.")
 
 -- Greater Protections
 zEffects:addNewEffect("infernal_vestment", "Infernal Vestment", "GCOLD", 1, "greater", "burning with transcendental ardor\\.", "A great chill washes over you as the magical warmth leaves you\\.")
@@ -162,7 +162,7 @@ zEffects:addNewEffect("resist_void", "Resist Void", "GASPH", 1, "greater", "the 
 
 -- Lesser Protections
 zEffects:addNewEffect("vestment_of_flame", "Vestment of Flame", "LCOLD", 1, "lesser", "slowly revolving around you\\. The magic settles finally on your", "You feel cold and exposed as the magical warmth leaves you\\.")
-zEffects:addNewEffect("ward_of_stone", "Ward of Stone", "LPHYS", 1, "lesser", "^[A-Z][a-z]+ eyes you attentively and the air around you starts to ripple\\.$|You concentrate your thoughts and channel a great amount of", "The air around you is calm once more as the rippling stops\\.")
+zEffects:addNewEffect("ward_of_stone", "Ward of Stone", "LPHYS", 1, "lesser", "[A-Z][a-z]+ eyes you attentively and the air around you starts to ripple\\.$|You concentrate your thoughts and channel a great amount of", "The air around you is calm once more as the rippling stops\\.")
 zEffects:addNewEffect("poison_fend", "Poison Fend", "LPOIS", 1, "lesser", "feel an unnatural warmth coursing through your veins\\.|Envisaging the arteries, you inject yourself with a mystic", "The warmth in your veins is gone\\.")
 zEffects:addNewEffect("rebuke_of_ice", "Rebuke of Ice", "LFIRE", 1, "lesser", "you feel a chill climbing up your spine\\.|You trace a circle in the air and a shining circumference of blue", "The chill in your bones is gone and you feel comfortably warm again\\.")
 zEffects:addNewEffect("caustic_opposition", "Caustic Opposition", "LACID", 1, "lesser", "adhesive fluid that tickles your skin\\.|You close your fist and manipulate the air around you", "The tickling adhesive fluid on your skin disappears\\.")
@@ -171,8 +171,30 @@ zEffects:addNewEffect("mystic_bulwark", "Mystic Bulwark", "LMAGI", 1, "lesser", 
 zEffects:addNewEffect("spark_shelter", "Spark Shelter", "LELEC", 1, "lesser", "energy leaps at you\\. The magic penetrates your chest, and|With a withdrawing motion of your outstreched hands a", "Your surroundings flash and with a shiver the magic in your body disappears\\.")
 zEffects:addNewEffect("endure_void", "Endure Void", "LASPH", 1, "lesser", "magic is absorbed into your body\\.|You breathe in and a light breeze brushes against your", "You have trouble breathing for a moment\\.")
 
+-- Greater Spheres
+zEffects:addNewEffect("gsphfire", "GSphere(Fire)", "gsphfire", 1, "greater", "A shimmering sphere of fire protection envelops you\\.", "Your greater protective sphere against fire damage vanishes\\.")
+zEffects:addNewEffect("gsphacid", "GSphere(Acid)", "gsphacid", 1, "greater", "A shimmering sphere of acid protection envelops you\\.", "Your greater protective sphere against acid damage vanishes\\.")
+zEffects:addNewEffect("gsphcold", "GSphere(Cold)", "gsphcold", 1, "greater", "A shimmering sphere of cold protection envelops you\\.", "Your greater protective sphere against cold damage vanishes\\.")
+zEffects:addNewEffect("gsphpsio", "GSphere(Psio)", "gsphpsio", 1, "greater", "A shimmering sphere of psionic protection envelops you\\.", "Your greater protective sphere against psionic damage vanishes\\.")
+zEffects:addNewEffect("gsphelec", "GSphere(Elec)", "gsphelec", 1, "greater", "A shimmering sphere of electric protection envelops you\\.", "Your greater protective sphere against electric damage vanishes\\.")
+zEffects:addNewEffect("gsphphys", "GSphere(Phys)", "gsphphys", 1, "greater", "A shimmering sphere of physical protection envelops you\\.", "Your greater protective sphere against physical damage vanishes\\.")
+zEffects:addNewEffect("gsphpois", "GSphere(Pois)", "gsphpois", 1, "greater", "A shimmering sphere of poison protection envelops you\\.", "Your greater protective sphere against poison damage vanishes\\.")
+zEffects:addNewEffect("gsphmagi", "GSphere(Magi)", "gsphmagi", 1, "greater", "A shimmering sphere of magical protection envelops you\\.", "Your greater protective sphere against magical damage vanishes\\.")
+zEffects:addNewEffect("gsphasph", "GSphere(Asph)", "gsphasph", 1, "greater", "A shimmering sphere of asphyxiation protection envelops you\\.", "Your greater protective sphere against asphyxiation damage vanishes\\.")
+
+-- Lesser Spheres
+zEffects:addNewEffect("lsphfire", "LSphere(Fire)", "lsphfire", 1, "lesser", "A faint shimmering sphere of fire protection envelops you\\.", "Your lesser protective sphere against fire damage vanishes\\.")
+zEffects:addNewEffect("lsphacid", "LSphere(Acid)", "lsphacid", 1, "lesser", "A faint shimmering sphere of acid protection envelops you\\.", "Your lesser protective sphere against acid damage vanishes\\.")
+zEffects:addNewEffect("lsphcold", "LSphere(Cold)", "lsphcold", 1, "lesser", "A faint shimmering sphere of cold protection envelops you\\.", "Your lesser protective sphere against cold damage vanishes\\.")
+zEffects:addNewEffect("lsphpsio", "LSphere(Psio)", "lsphpsio", 1, "lesser", "A faint shimmering sphere of psionic protection envelops you\\.", "Your lesser protective sphere against psionic damage vanishes\\.")
+zEffects:addNewEffect("lsphelec", "LSphere(Elec)", "lsphelec", 1, "lesser", "A faint shimmering sphere of electric protection envelops you\\.", "Your lesser protective sphere against electric damage vanishes\\.")
+zEffects:addNewEffect("lsphphys", "LSphere(Phys)", "lsphphys", 1, "lesser", "A faint shimmering sphere of physical protection envelops you\\.", "Your lesser protective sphere against physical damage vanishes\\.")
+zEffects:addNewEffect("lsphpois", "LSphere(Pois)", "lsphpois", 1, "lesser", "A faint shimmering sphere of poison protection envelops you\\.", "Your lesser protective sphere against poison damage vanishes\\.")
+zEffects:addNewEffect("lsphmagi", "LSphere(Magi)", "lsphmagi", 1, "lesser", "A faint shimmering sphere of magical protection envelops you\\.", "Your lesser protective sphere against magical damage vanishes\\.")
+zEffects:addNewEffect("lsphasph", "LSphere(Asph)", "lsphasph", 1, "lesser", "A faint shimmering sphere of asphyxiation protection envelops you\\.", "Your lesser protective sphere against asphyxiation damage vanishes\\.")
+
 -- Multi-group Effects
-zEffects:addNewEffect("armour_of_god", "Armour of God", "AOG", 1, "lesser greater", "^A shining robe of glowing silver surrounds you\\.$|^Shining vestments of glowing silver surround you\\.$|^A shining suit of glowing silver mail surrounds you\\.$", "The Armour of God surrounding you fades away\\.")
+zEffects:addNewEffect("armour_of_god", "Armour of God", "AOG", 1, "lesser greater", "A shining robe of glowing silver surrounds you\\.$|^Shining vestments of glowing silver surround you\\.$|^A shining suit of glowing silver mail surrounds you\\.", "The Armour of God surrounding you fades away\\.")
 zEffects:addNewEffect("protection_from_good", "Protection from Good", "PFG", 1, "lesser greater", "A sizzling red aura surrounds you\\.", "The red aura surrounding you vanishes\\.")
 
 -- Vulnerabilities
@@ -188,14 +210,14 @@ zEffects:addNewEffect("blemished_health", "Blemished Health", "blemished_health"
 zEffects:addNewEffect("multivuln", "Multivuln", "multivuln", 1, nil, "You feel your resistances weakening\\.", "You feel your resistances returning to normal\\.")
 
 -- Protective Spells
-zEffects:addNewEffect("amorphic_armour", "Amorphic Armour", "va", 2, nil, "^[A-Z][a-z]+ casts a protective spell on you\\.$|^You cast a protective spell on (.+)\\.$", "Your Amorphic Armour spell wears off\\.")
+zEffects:addNewEffect("amorphic_armour", "Amorphic Armour", "va", 2, nil, "[A-Z][a-z]+ casts a protective spell on you\\.$|^You cast a protective spell on (.+)\\.", "Your Amorphic Armour spell wears off\\.")
 
 -- Skin Group
 zEffects:addNewEffect("stoneskin", "Stoneskin", "SSKIN", 2, "skin", "Granite plates form over your skin\\.", "Your stoneskin crumbles and drops off\\.")
 zEffects:addNewEffect("barkskin", "Barkskin", "BSKIN", 2, "skin", "Your skin turns green and fissures, thickening into a layer of tough bark\\.", "Your barkskin wears off\\.")
 
 -- Shield of Protection
-zEffects:addNewEffect("shield_of_protection", "Shield of Protection", "SOP", 2, nil, "You form a barrier of repulsive magic around yourself\\.|You are surrounded by a green glow\\.", "Your protection spell wears off\\.")
+zEffects:addNewEffect("shield_of_protection", "Shield of Protection", "SOP", 2, nil, "You form a barrier of repulsive magic around yourself\\.$|^You are surrounded by a green glow\\.", "Your protection spell wears off\\.")
 
 -- Displacement
-zEffects:addNewEffect("displacement", "Displacement", "DISP", 2, nil, "^[A-Z][a-z]+ displaces your image\\.$|^You displace ([A-Z][a-z]+)\\'s image\\.$", "Your displacement wears off\\.")
+zEffects:addNewEffect("displacement", "Displacement", "DISP", 2, nil, "[A-Z][a-z]+ displaces your image\\.$|^You displace ([A-Z][a-z]+)\\'s image\\.", "Your displacement wears off\\.")

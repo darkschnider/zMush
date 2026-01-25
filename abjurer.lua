@@ -6,58 +6,9 @@ require ("prots")
 local trigFlags = 33 -- Enabled | RegularExpression
 
 -- Delete existing Abjurer groups before recreating
-DeleteAliasGroup("Abjurer Aliases")
-DeleteTriggerGroup("Abjurer Vulns")
+DeleteAliasGroup("Abjurer LUA Aliases")
+DeleteTriggerGroup("Abjurer LUA Triggers")
 
-addNewSpellAndAlias("grap", "Ward of Steel", "grap", "/grap (.*)", aliasEnabledAndRegex, nil, 1, "greater", ".* regards you with a focused look in .* eyes and the air around", "The air around you is calm once more as the wavering stops.")
---addNewSpellAndAlias("gpoi", "G. Poison", "gpoi", "/gpoi (.*)", aliasEnabledAndRegex, nil, 1, "greater", "adhesive fluid that tickles your skin.", "The air around you is calm once more as the wavering stops.")
---zEffects:addNewEffect("lcold", "Lesser Cold Resistance (sph)", "lcoldSph")
-
--- Greater Spheres
-zEffects:addNewEffect("gsphfire", "GSphere(Fire)", "gsphfire", 1, "greater", "A shimmering sphere of fire protection envelops you\\.", "Your greater protective sphere against fire damage vanishes\\.")
-zEffects:addNewEffect("gsphacid", "GSphere(Acid)", "gsphacid", 1, "greater", "A shimmering sphere of acid protection envelops you\\.", "Your greater protective sphere against acid damage vanishes\\.")
-zEffects:addNewEffect("gsphcold", "GSphere(Cold)", "gsphcold", 1, "greater", "A shimmering sphere of cold protection envelops you\\.", "Your greater protective sphere against cold damage vanishes\\.")
-zEffects:addNewEffect("gsphpsio", "GSphere(Psio)", "gsphpsio", 1, "greater", "A shimmering sphere of psionic protection envelops you\\.", "Your greater protective sphere against psionic damage vanishes\\.")
-zEffects:addNewEffect("gsphelec", "GSphere(Elec)", "gsphelec", 1, "greater", "A shimmering sphere of electric protection envelops you\\.", "Your greater protective sphere against electric damage vanishes\\.")
-zEffects:addNewEffect("gsphphys", "GSphere(Phys)", "gsphphys", 1, "greater", "A shimmering sphere of physical protection envelops you\\.", "Your greater protective sphere against physical damage vanishes\\.")
-zEffects:addNewEffect("gsphpois", "GSphere(Pois)", "gsphpois", 1, "greater", "A shimmering sphere of poison protection envelops you\\.", "Your greater protective sphere against poison damage vanishes\\.")
-zEffects:addNewEffect("gsphmagi", "GSphere(Magi)", "gsphmagi", 1, "greater", "A shimmering sphere of magical protection envelops you\\.", "Your greater protective sphere against magical damage vanishes\\.")
-zEffects:addNewEffect("gsphasph", "GSphere(Asph)", "gsphasph", 1, "greater", "A shimmering sphere of asphyxiation protection envelops you\\.", "Your greater protective sphere against asphyxiation damage vanishes\\.")
-
--- Lesser Spheres
-zEffects:addNewEffect("lsphfire", "LSphere(Fire)", "lsphfire", 1, "lesser", "A faint shimmering sphere of fire protection envelops you\\.", "Your lesser protective sphere against fire damage vanishes\\.")
-zEffects:addNewEffect("lsphacid", "LSphere(Acid)", "lsphacid", 1, "lesser", "A faint shimmering sphere of acid protection envelops you\\.", "Your lesser protective sphere against acid damage vanishes\\.")
-zEffects:addNewEffect("lsphcold", "LSphere(Cold)", "lsphcold", 1, "lesser", "A faint shimmering sphere of cold protection envelops you\\.", "Your lesser protective sphere against cold damage vanishes\\.")
-zEffects:addNewEffect("lsphpsio", "LSphere(Psio)", "lsphpsio", 1, "lesser", "A faint shimmering sphere of psionic protection envelops you\\.", "Your lesser protective sphere against psionic damage vanishes\\.")
-zEffects:addNewEffect("lsphelec", "LSphere(Elec)", "lsphelec", 1, "lesser", "A faint shimmering sphere of electric protection envelops you\\.", "Your lesser protective sphere against electric damage vanishes\\.")
-zEffects:addNewEffect("lsphphys", "LSphere(Phys)", "lsphphys", 1, "lesser", "A faint shimmering sphere of physical protection envelops you\\.", "Your lesser protective sphere against physical damage vanishes\\.")
-zEffects:addNewEffect("lsphpois", "LSphere(Pois)", "lsphpois", 1, "lesser", "A faint shimmering sphere of poison protection envelops you\\.", "Your lesser protective sphere against poison damage vanishes\\.")
-zEffects:addNewEffect("lsphmagi", "LSphere(Magi)", "lsphmagi", 1, "lesser", "A faint shimmering sphere of magical protection envelops you\\.", "Your lesser protective sphere against magical damage vanishes\\.")
-zEffects:addNewEffect("lsphasph", "LSphere(Asph)", "lsphasph", 1, "lesser", "A faint shimmering sphere of asphyxiation protection envelops you\\.", "Your lesser protective sphere against asphyxiation damage vanishes\\.")
-
-addNewSpellAndAlias("iw", "Iron Will", "iw", "/iw (.*)", aliasEnabledAndRegex, nil, 1, "stun", "^[A-Z][a-z]+ stares deep into your eyes, bolstering your concentration greatly\\.$|^You turn your mind inwards, enchanting yourself with an aura of rigid concentration\\.$", "Your Iron Will wears off\\.")
-addNewSpellAndAlias("eh", "Energy Hauberk", "eh", "/eh (.*)", aliasEnabledAndRegex, nil, 1, nil, "With a flash a shining hauberk of pure energy encases you\\.$|^hauberk around yourself\\.$", "The energy surrounding your body dwindles away\\.")
-
---- Abjurer Protections ---
--- Format: code 	name
----        lacid 	caustic opposition
----        gacid 	corrosive opposition
----        lasph 	endure void
----        gasph 	resist void
----        lcold 	vestment of flame
----        gcold 	infernal vestment
----        lelec 	spark shelter
----        gelec 	lightning guard
----        lfire 	rebuke of ice
----        gfire 	winter's rebuke
----        lmagi 	mystic bulwark
----        gmagi 	arcane bulwark
----        lphys 	ward of stone
----        gphys 	ward of steel
----        lpois 	poison fend
----        gpois 	venom fend
----        lpsio 	mental aegis
----        gpsio 	psychic aegis
 ----
 -- INVULNERABILITIES
 -- Aliases for protection spells
@@ -165,28 +116,40 @@ AddTriggerEx("luaFragileFrameVuln", "^You trace the rune of withering and an ash
 AddTriggerEx("luaBlemishedHealthVuln", "^You trace the rune of virulence and pinch your fingers.*", "vuln_up('blemished_health')", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
 AddTriggerEx("luaLanguishedSoulVuln", "^You trace the rune of dreaming and a bolt of viridian .*", "vuln_up('languished_soul')", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
 
-SetTriggerOption("luaElementalDisarrayVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaRayOfEnervationVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaVitriolicBaneVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaLaboredBreathingVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaDepriveWarmthVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaEnergeticFrailtyVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaIncendiaryCoatingVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaMysticImpairmentVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaFragileFrameVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaBlemishedHealthVuln", "group", "Abjurer Vulns")
-SetTriggerOption("luaLanguishedSoulVuln", "group", "Abjurer Vulns")
+SetTriggerOption("luaElementalDisarrayVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaRayOfEnervationVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaVitriolicBaneVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaLaboredBreathingVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaDepriveWarmthVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaEnergeticFrailtyVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaIncendiaryCoatingVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaMysticImpairmentVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaFragileFrameVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaBlemishedHealthVuln", "group", "Abjurer LUA Triggers")
+SetTriggerOption("luaLanguishedSoulVuln", "group", "Abjurer LUA Triggers")
 
 -- Elemental Disarray and Ray of Enervation
+function elemental_disarray(target_name)
+    Send("cast 'elemental disarray' " .. target_name)
+end
 AddAlias("ed", "^/ed(.*)$", "elemental_disarray(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
+function ray_of_enervation(target_name)
+    Send("cast 'ray of enervation' " .. target_name)
+end
 AddAlias("re", "^/re(.*)$", "ray_of_enervation(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 
 -- Physical vulnerabilities
+function fragile_frame(target_name)
+    Send("cast 'fragile frame' " .. target_name)
+end
 AddAlias("vphys", "^/vphys(.*)$", "fragile_frame(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_phys", "^/v_phys(.*)$", "fragile_frame(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_physical", "^/v_physical(.*)$", "fragile_frame(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 
 -- Magic vulnerabilities
+function mystic_impairment(target_name)
+    Send("cast 'mystic impairment' " .. target_name)
+end
 AddAlias("vmag", "^/vmag(.*)$", "mystic_impairment(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_mag", "^/v_mag(.*)$", "mystic_impairment(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("vmagi", "^/vmagi(.*)$", "mystic_impairment(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
@@ -194,18 +157,30 @@ AddAlias("v_magi", "^/v_magi(.*)$", "mystic_impairment(trim('%1'))", alias_flag.
 AddAlias("v_magic", "^/v_magic(.*)$", "mystic_impairment(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 
 -- Fire vulnerabilities
+function incendiary_coating(target_name)
+    Send("cast 'incendiary coating' " .. target_name)
+end
 AddAlias("vfire", "^/vfire(.*)$", "incendiary_coating(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_fire", "^/v_fire(.*)$", "incendiary_coating(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 
 -- Cold vulnerabilities
+function deprive_warmth(target_name)
+    Send("cast 'deprive warmth' " .. target_name)
+end
 AddAlias("vcold", "^/vcold(.*)$", "deprive_warmth(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_cold", "^/v_cold(.*)$", "deprive_warmth(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 
 -- Acid vulnerabilities
+function vitriolic_bane(target_name)
+    Send("cast 'vitriolic bane' " .. target_name)
+end
 AddAlias("vacid", "^/vacid(.*)$", "vitriolic_bane(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_acid", "^/v_acid(.*)$", "vitriolic_bane(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 
 -- Psionic vulnerabilities
+function languished_soul(target_name)
+    Send("cast 'languished soul' " .. target_name)
+end
 AddAlias("vpsi", "^/vpsi(.*)$", "languished_soul(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_psi", "^/v_psi(.*)$", "languished_soul(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("vpsio", "^/vpsio(.*)$", "languished_soul(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
@@ -213,6 +188,9 @@ AddAlias("v_psio", "^/v_psio(.*)$", "languished_soul(trim('%1'))", alias_flag.En
 AddAlias("v_psionic", "^/v_psionic(.*)$", "languished_soul(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 
 -- Asphyxiation vulnerabilities
+function labored_breathing(target_name)
+    Send("cast 'labored breathing' " .. target_name)
+end
 AddAlias("vasp", "^/vasp(.*)$", "labored_breathing(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_asp", "^/v_asp(.*)$", "labored_breathing(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("vasph", "^/vasph(.*)$", "labored_breathing(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
@@ -220,11 +198,17 @@ AddAlias("v_asph", "^/v_asph(.*)$", "labored_breathing(trim('%1'))", alias_flag.
 AddAlias("v_asphyxiation", "^/v_asphyxiation(.*)$", "labored_breathing(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 
 -- Electric vulnerabilities
+function energetic_frailty(target_name)
+    Send("cast 'energetic frailty' " .. target_name)
+end
 AddAlias("velec", "^/velec(.*)$", "energetic_frailty(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_elec", "^/v_elec(.*)$", "energetic_frailty(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_electric", "^/v_electric(.*)$", "energetic_frailty(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 
 -- Poison vulnerabilities
+function blemished_health(target_name)
+    Send("cast 'blemished health' " .. target_name)
+end
 AddAlias("vpoi", "^/vpoi(.*)$", "blemished_health(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("v_poi", "^/v_poi(.*)$", "blemished_health(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("vpois", "^/vpois(.*)$", "blemished_health(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
@@ -255,18 +239,6 @@ local abjurer_aliases = {
 }
 
 for _, alias_name in ipairs(abjurer_aliases) do
-  SetAliasOption(alias_name, "group", "Abjurer Aliases")
+  SetAliasOption(alias_name, "group", "Abjurer LUA Aliases")
   SetAliasOption(alias_name, "send_to", sendto.script)
 end
-
---- Abjurer Vulns ---
--- Format: code     name
----        vacid 	vitriolic bane
----        vasph 	labored breathing
----        vcold 	deprive warmth
----        velec 	energetic frailty
----        vfire 	incendiary coating
----        vmagi 	mystic impairment
----        vphys 	fragile frame
----        vpois 	blemished health
----        vpsio 	languished soul

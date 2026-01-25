@@ -23,7 +23,7 @@ AddAlias("luaAliasRegeneration", "^/regen(.*)$", "regeneration(trim('%1'))", ali
 AddAlias("luaAliasRelocate", "^/reloc(.*)$", "relocate(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("luaAliasRemovePoison", "^/rp(.*)$", "remove_poison(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("luaAliasReduceWeapon", "^/rweap(.*)$", "reduce_weapon(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
-AddAlias("luaAliasShieldOfProtection", "^/sop (.*)", "shield_of_protection(%1)", alias_flag.Enabled + alias_flag.RegularExpression, "")
+AddAlias("luaAliasShieldOfProtection", "^/sop(.*)$", "shield_of_protection(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("luaAliasTeleportWithoutError", "^/twe(.*)$", "teleport_without_error(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 AddAlias("luaAliasWaterWalking", "^/ww(.*)$", "water_walking(trim('%1'))", alias_flag.Enabled + alias_flag.RegularExpression, "")
 

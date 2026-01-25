@@ -117,7 +117,7 @@ function do_prot(options)
         end
         
         local spell_name = opts.n or opts.s
-        do_announce({d = opts.d}, spell_name)
+        do_announce({d = opts.d, c = opts.d == "status" and "orange" or ""}, spell_name)
         return
     end
     
@@ -148,5 +148,5 @@ function do_prot(options)
     end
     
     local spell_name = capitalize(opts.n or opts.s)
-    do_announce({d = "default", f = opts.t}, spell_name)
+    do_announce({d = "default", f = opts.t, c = opts.d == "status" and "orange" or ""}, spell_name)
 end

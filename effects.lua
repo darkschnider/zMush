@@ -341,20 +341,17 @@ end
 function Effects:addNewEffect(key, name, short_name, layers, groups, upMessage, downMessage)
     local newEffect = Effect:new(key, name, short_name, layers, groups)
     self:add(newEffect)
-    if not upMessage or not downMessage then
+    if not upMessage and not downMessage then
         return
     end
-    local alreadyExists = GetTrigger("luaTrig"..short_name .."Up")
-    if alreadyExists ~= eTriggerNotFound then
-        DeleteTrigger("luaTrig"..short_name .."Up")
-        DeleteTrigger("luaTrig"..short_name .."Down")
-    end
+    DeleteTrigger("luaTrig"..short_name .."Up")
+    DeleteTrigger("luaTrig"..short_name .."Down")
     local trigFlags = 33 -- Enabled | RegularExpression
-    if (#upMessage > 0) then
+    if (upMessage and #upMessage > 0) then
         AddTriggerEx("luaTrig"..short_name .."Up", "^"..upMessage.."$", "effect_on(\"" .. key .. "\")", trigFlags, custom_colour.Custom3, 0, "", "", 12, 100)
         SetTriggerOption("luaTrig"..short_name .."Up", "group", "Effect Definitions")
     end
-    if (#downMessage > 0) then
+    if (downMessage and #downMessage > 0) then
         AddTriggerEx("luaTrig"..short_name .. "Down", "^"..downMessage.."$", "effect_off(\"" .. key .. "\")", trigFlags, custom_colour.Custom6, 0, "", "", 12, 100)
         SetTriggerOption("luaTrig"..short_name .."Down", "group", "Effect Definitions")
     end

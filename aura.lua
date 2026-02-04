@@ -89,8 +89,7 @@ function aura_effects_display(text, location)
         c = "green"
     }
     
-    do_announce(options, GetVariable("aura_target") or GetVariable("healing") .. " has the above effects online:")
-    do_announce(options, text)
+    do_announce(options, (GetVariable("aura_target") or GetVariable("healing")) .. " has the above effects online: " .. text)
 end
 
 -- Alias for aura_effects_display
@@ -107,20 +106,23 @@ end
 -- Triggers for aura detection
 ----
 
+-- Delete existing Aura trigger group before recreating
+DeleteTriggerGroup("Aura LUA Triggers")
+
 -- Trigger for when no spells are affecting the target
 DeleteTrigger("aura_detection_none")
 AddTriggerEx("aura_detection_none", "^The target is not under the noticeable effect of any spells\\.$",
-    "do_aura_detection()", 
+    "do_aura_detection()",
     trigger_flag.Enabled + trigger_flag.RegularExpression,
-    custom_colour.Custom4, 0, "", "", 12, 100)
-    SetTriggerOption("aura_detection_none", "group", "Abjurer LUA Triggers")
+    custom_colour.Custom4, 0, "", "", sendto.script, 100)
+SetTriggerOption("aura_detection_none", "group", "Aura LUA Triggers")
 
 -- Trigger for the start of aura detection output
 function do_aura_detection_start(name, line, wildcards)
     local match = wildcards[1]
-    Note("match: " .. match)
+    --Note("match: " .. match)
     if match:sub(-1) == "." then
-        Note("Single line detected")
+        --Note("Single line detected")
         -- Single line, process immediately
         parse_aura_effects(match)
         aura_detection_line = ""
@@ -131,15 +133,15 @@ function do_aura_detection_start(name, line, wildcards)
     end
 end
 DeleteTrigger("aura_detection_start")
-AddTriggerEx("aura_detection_start", "^The target is affected by (.+)$", "",
-    trigger_flag.Enabled + trigger_flag.RegularExpression,
-    custom_colour.Custom4, 0, "", "do_aura_detection_start", 12, 100)
-SetTriggerOption("aura_detection_start", "group", "Abjurer LUA Triggers")
+AddTriggerEx("aura_detection_start", "^The target is affected by (.+)$",
+    "", trigger_flag.Enabled + trigger_flag.RegularExpression,
+    custom_colour.Custom4, 0, "", "do_aura_detection_start", sendto.world, 100)
+SetTriggerOption("aura_detection_start", "group", "Aura LUA Triggers")
 
 -- Trigger for continuation lines of aura detection
 function do_aura_detection_more(name, line, wildcards)
     local match = wildcards[1]
-    Note("match: " .. match)
+    --Note("match: " .. match)
     aura_detection_line = aura_detection_line .. " " .. match
     if match:sub(-1) == "." then
         -- End of multi-line, process now
@@ -149,9 +151,9 @@ function do_aura_detection_more(name, line, wildcards)
     end
 end
 DeleteTrigger("aura_detection_more")
-AddTriggerEx("aura_detection_more", "^(.+)$", "",
-    trigger_flag.RegularExpression,  -- Disabled by default
-    custom_colour.Custom4, 0, "", "do_aura_detection_more", 12, 100)
-SetTriggerOption("aura_detection_more", "group", "Abjurer LUA Triggers")
+AddTriggerEx("aura_detection_more", "^(.+)$",
+    "", trigger_flag.RegularExpression,
+    custom_colour.Custom4, 0, "", "do_aura_detection_more", sendto.world, 100)
+SetTriggerOption("aura_detection_more", "group", "Aura LUA Triggers")
 
 EnableTrigger("aura_detection_more", false)  -- Initially disabled

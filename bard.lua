@@ -1,43 +1,56 @@
 require "util"
 require "add_effect"
 zEffects = require "effects"
+require "do_announce"
 
+-- Delete existing Bard trigger group before recreating
+DeleteTriggerGroup("Bard LUA Trigs")
 
-zEffects:addNewGroup("guise", "Guise")
-addNewSpellAndAlias("angel_guise", "Guise of the Angel", "angel", "/angel", aliasEnabled, nil, 1, "guise", "You assume the shadowy guise of \\\"Heavenly Angel\\\"", "Your guise wears off.")
+-- Delete existing Bard alias group before recreating
+DeleteAliasGroup("Bard LUA Aliases")
+local trigFlags = 33 -- Enabled | RegularExpression
 
-lastBardSong = ""
+local lastBardSong = ""
 
 local bard_songs = {
-    ["CHA"] = "bario's bawdy ballad",
-    ["INT"] = "apollo's adagio",
-    ["WIS"] = "symphony of solomon",
-    ["STR"] = "berserker's bravura",
-    ["DEX"] = "aria of the eagles",
-    ["CON"] = "vigorous concerto",
-    ["PSALM"] = "psalm of healing"
+    {key = "CHA", spell = "bario's bawdy ballad", display = "Bario's Bawdy Ballad (cha)", alias = "cha"},
+    {key = "INT", spell = "apollo's adagio", display = "Apollo's Adagio (int)", alias = "int"},
+    {key = "WIS", spell = "symphony of solomon", display = "Symphony of Solomon (wis)", alias = "wis"},
+    {key = "STR", spell = "berserker's bravura", display = "Berserker's Bravura (str)", alias = "str"},
+    {key = "DEX", spell = "aria of the eagles", display = "Aria of the Eagles (dex)", alias = "dex"},
+    {key = "CON", spell = "vigorous concerto", display = "Vigorous Concerto (con)", alias = "con"},
+    {key = "PSALM", spell = "psalm of healing", display = "Psalm of Healing (healing)", alias = "psalm"},
+    {key = "SPR", spell = "claris' melody of mana", display = "Claris' Melody of Mana (spr)", alias = "spr"},
+    {key = "HPR", spell = "lullaby of life", display = "Lullaby of Life (hpr)", alias = "hpr"},
+    {key = "AC", spell = "chant of fortitude", display = "Chant of Fortitude (ac)", alias = "ac"},
+    {key = "BRAVE", spell = "score of the steadfast", display = "Score of the Steadfast (bravery)", alias = "brave"},
+    {key = "SPMAX", spell = "sonata of sorcery", display = "Sonata of Sorcery (spmax)", alias = "spmax"},
+    {key = "FLIGHT", spell = "uplifting melody", display = "Uplifting Melody (flight)", alias = "flight"},
+    {key = "MELEE", spell = "chant of the beast", display = "Chant of the Beast (+hits)", alias = "melee"}
 }
 
---zEffects:addNewEffect(key, spell_name, short_name, layers, groups, upMessage, downMessage)
-zEffects:addNewEffect("CHA", "Bario's Bawdy Ballad", nil, 1, nil, nil, nil)
-zEffects:addNewEffect("INT", "Apollo's Adagio", nil, 1, nil, nil, nil)
-zEffects:addNewEffect("CON", "Vigorous Concerto", nil, 1, nil, nil, nil)
-zEffects:addNewEffect("WIS", "Symphony of Solomon", nil, 1, nil, nil, nil)
-zEffects:addNewEffect("DEX", "Aria of the Eagles", nil, 1, nil, nil, nil)
-zEffects:addNewEffect("STR", "Berserker's Bravura", nil, 1, nil, nil, nil)
-zEffects:addNewEffect("PSALM", "Psalm of Healing", nil, 1, nil, nil, nil)
+local bard_guises = {
+    {match="Heavenly Angel", announce_type="Angel"},
+    {match="Mind Flayer", announce_type="Flayer"},
+    {match="Halfling Scout", announce_type="Scout"},
+    {match="Mighty Titan", announce_type="Titan"},
+    {match="Repulsive Ogre", announce_type="Ogre"},
+    {match="Noble Paladin", announce_type="Paladin"},
+    {match="Cackling Skeleton", announce_type="Skeleton"}
+}
 
-bard_visu_id = ""
-bard_visu_spell_name = ""
+local bard_songs_lookup = {}
+local bard_visu_spell_name = ""
+local bard_visu_id = ""
 
-function castBardSpell(spell_name)
-    local key = findTableKeyByValue(bard_songs, spell_name)
-    if key ~= nil then
-        lastBardSong = spell_name
+function castBardSpell(spell_key)
+    local spell_name = bard_songs_lookup[spell_key]
+    if spell_name ~= nil then
+        lastBardSong = spell_key
         addEffectToCheck(lastBardSong)
-        Execute("cast " .. bard_songs[key] .. " try very slow")
+        Execute("cast " .. spell_name .. " try very slow")
     else
-        error("Unknown bard spell: " .. spell_name)
+        error("Unknown bard spell: " .. spell_key)
     end
 end
 
@@ -50,7 +63,7 @@ end
 function castVisu(name, line, wildcards)
     bard_visu_spell_name = wildcards[1]
     --print("bard_visu_spell_name: " .. bard_visu_spell_name)
-    visu = replace("'", "", replace(" ", "_", bard_visu_spell_name))
+    local visu = sanitize(bard_visu_spell_name)
     bard_visu_id = "visu_" .. visu
     --print("bard_visu_id: " .. bard_visu_id)
     Execute("cast visualize act at " .. bard_visu_spell_name .. " try very slow")
@@ -64,17 +77,27 @@ function visuOn()
     end
 
     effect_on(bard_visu_id)
-    bard_visu_id = ""
+    bard_visu_id = "" -- reset for next time
 end
 
 function bard_visu_off(name, line, wildcards)
     local spell_name = wildcards[1]
     --print("Visu off: " .. visu)
-    visu = "visu_" .. replace("'", "", replace(" ", "_", spell_name))
+    local visu = "visu_" .. sanitize(spell_name)
     --print("Visu off: " .. spell_name .. "[" .. visu .. "]")
     effect_off(visu)
 end
 
+AddTriggerEx("luaBardVisuOff", "^Your (.*) visu spell is no longer affecting your songs\\.$", "", trigFlags, custom_colour.Custom6, 0, "", "", sendto.world, 100)
+SetTriggerOption("luaBardVisuOff", "script", "bard_visu_off")
+SetTriggerOption("luaBardVisuOff", "group", "Bard LUA Trigs")
+AddTriggerEx("luaBardVisuOn", "^You weave new magic into your song\\.$", "visuOn()", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaBardVisuOn", "group", "Bard LUA Trigs")
+AddAlias("luaAliasBardVisu", "^/visu (.*)", "", aliasEnabledAndRegex,"castVisu")
+SetAliasOption("luaAliasBardVisu", "group", "Bard LUA Aliases")
+----
+-- Know Your Audience (KYA) Example
+----
 -- You are done with the chant.
 -- You utter the magic words 'raera yuouy nadna'
 -- Xecthae's gender is: male
@@ -111,40 +134,22 @@ local resist_map = {
     ["invulnerable"] = 8
 }
 
-local trigFlags = 33 -- Enabled | RegularExpression
-casting_kya = false
+local casting_kya = false
+local kya_target = ""
+local kya_target_resists = {}
+local kya_announce_target = "other"
+
+-- Global for the trigs
 kya_stats = {
     ["resist_most"] = "",
     ["resist_least"] = "",
     ["health"] = 0,
     ["align"] = ""
 }
-kya_target = ""
-kya_target_resists = {}
-kya_announce_target = "other"
 
--- Delete existing Bard trigger group before recreating
-DeleteTriggerGroup("Bard LUA Trigs")
-
--- Delete existing Bard alias group before recreating
-DeleteAliasGroup("Bard LUA Aliases")
-
-AddTriggerEx("luaKyaHealth", "^[\\w'\\s]+ The target is at about (\\d+)% health\\.$", "kya_stats[\"health\"] = %1", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaKyaHealth", "enabled", "n")
-SetTriggerOption("luaKyaHealth", "group", "Bard LUA Trigs")
-AddTriggerEx("luaKyaResistMost", "^[\\w'\\s]+ resists the damage type (.*) the most\\.$", "kya_stats[\"resist_most\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaKyaResistMost", "enabled", "n")
-SetTriggerOption("luaKyaResistMost", "group", "Bard LUA Trigs")
-AddTriggerEx("luaKyaResistLeast", "^[\\w'\\s]+ resists the damage type (.*) the least\\.$", "kya_stats[\"resist_least\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaKyaResistLeast", "enabled", "n")
-SetTriggerOption("luaKyaResistLeast", "group", "Bard LUA Trigs")
-AddTriggerEx("luaKyaResists", "^([\\w'\\s]+) is (.*) to (\\w+)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_add_resist", sendto.world, 100)
-SetTriggerOption("luaKyaResists", "enabled", "n")
-SetTriggerOption("luaKyaResists", "group", "Bard LUA Trigs")
-AddTriggerEx("luaKyaDone", "^([\\w'\\s]+) is (Demonic|Very evil|Extremely evil|Evil|Neutral|Good|Angelic|Very good|Extremely good)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_done", sendto.world, 100)
-SetTriggerOption("luaKyaDone", "enabled", "n")
-SetTriggerOption("luaKyaDone", "group", "Bard LUA Trigs")
-
+----
+-- KYA (Know Your Audience)
+----
 function kya_start(name, line, wildcards)
     kya_target = wildcards[1]
     --print("kya_target: " .. kya_target)
@@ -226,55 +231,82 @@ function kya_add_resist(name, line, wildcards)
     end
 end
 
-DeleteAlias("luaKya")
+function bard_guise_on(guise_name)
+    local guise_effect = zEffects:find('bardGuise')
+    --tprint(guise_effect)
+    for _, guise in ipairs(bard_guises) do
+        if guise.match == guise_name and guise_effect then
+            guise_effect._name = "Guise of the " .. guise.announce_type
+            break
+        end
+    end
+    effect_on('bardGuise')
+end
+
+----
+-- Aliases and Triggers for Bard
+----
+
+-- KYA
 AddAlias("luaKya", "/kya (.*)", "", aliasEnabledAndRegex, "kya_start")
 SetAliasOption("luaKya", "group", "Bard LUA Aliases")
---SetAliasOption("luaKya", "send_to", sendto.script)
+AddTriggerEx("luaKyaHealth", "^[\\w'\\s]+ The target is at about (\\d+)% health\\.$", "kya_stats[\"health\"] = %1", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaKyaHealth", "enabled", "n")
+SetTriggerOption("luaKyaHealth", "group", "Bard LUA Trigs")
+AddTriggerEx("luaKyaResistMost", "^[\\w'\\s]+ resists the damage type (.*) the most\\.$", "kya_stats[\"resist_most\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaKyaResistMost", "enabled", "n")
+SetTriggerOption("luaKyaResistMost", "group", "Bard LUA Trigs")
+AddTriggerEx("luaKyaResistLeast", "^[\\w'\\s]+ resists the damage type (.*) the least\\.$", "kya_stats[\"resist_least\"] = \"%1\"", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaKyaResistLeast", "enabled", "n")
+SetTriggerOption("luaKyaResistLeast", "group", "Bard LUA Trigs")
+AddTriggerEx("luaKyaResists", "^([\\w'\\s]+) is (.*) to (\\w+)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_add_resist", sendto.world, 100)
+SetTriggerOption("luaKyaResists", "enabled", "n")
+SetTriggerOption("luaKyaResists", "group", "Bard LUA Trigs")
+AddTriggerEx("luaKyaDone", "^([\\w'\\s]+) is (Demonic|Very evil|Extremely evil|Evil|Neutral|Good|Angelic|Very good|Extremely good)\\.$", "", trigFlags, custom_colour.Custom3, 0, "", "kya_done", sendto.world, 100)
+SetTriggerOption("luaKyaDone", "enabled", "n")
+SetTriggerOption("luaKyaDone", "group", "Bard LUA Trigs")
 
+-- Bard Songs
 AddTriggerEx("luabard_songstart", "^You begin to sing, infusing your song with magic\\.$", "songSung()", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
 SetTriggerOption("luabard_songstart", "group", "Bard LUA Trigs")
-AddTriggerEx("luaBardChaOff", "^Your bario's bawdy ballad spell is no longer affecting your songs\\.$", "effect_off('CHA')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaBardChaOff", "group", "Bard LUA Trigs")
-AddTriggerEx("luaBardIntOff", "^Your apollo's adagio spell is no longer affecting your songs\\.$", "effect_off('INT')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaBardIntOff", "group", "Bard LUA Trigs")
-AddTriggerEx("luaBardConOff", "^Your vigorous concerto spell is no longer affecting your songs\\.$", "effect_off('CON')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaBardConOff", "group", "Bard LUA Trigs")
-AddTriggerEx("luaBardWisOff", "^Your symphony of solomon spell is no longer affecting your songs\\.$", "effect_off('WIS')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaBardWisOff", "group", "Bard LUA Trigs")
-AddTriggerEx("luaBardDexOff", "^Your aria of the eagles spell is no longer affecting your songs\\.$", "effect_off('DEX')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaBardDexOff", "group", "Bard LUA Trigs")
-AddTriggerEx("luaBardStrOff", "^Your berserker's bravura spell is no longer affecting your songs\\.$", "effect_off('STR')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaBardStrOff", "group", "Bard LUA Trigs")
-AddTriggerEx("luaBardPsalmOff", "^Your psalm of healing spell is no longer affecting your songs\\.$", "effect_off('PSALM')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaBardPsalmOff", "group", "Bard LUA Trigs")
 
-AddTriggerEx("luaBardVisuOff", "^Your (.*) visu spell is no longer affecting your songs\\.$", "", trigFlags, custom_colour.Custom6, 0, "", "", sendto.world, 100)
-SetTriggerOption("luaBardVisuOff", "script", "bard_visu_off")
-SetTriggerOption("luaBardVisuOff", "group", "Bard LUA Trigs")
-AddTriggerEx("luaBardVisuOn", "^You weave new magic into your song\\.$", "visuOn()", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
-SetTriggerOption("luaBardVisuOn", "group", "Bard LUA Trigs")
-AddAlias("luaAliasBardVisu", "^/visu (.*)", "", aliasEnabledAndRegex,"castVisu")
-SetAliasOption("luaAliasBardVisu", "group", "Bard LUA Aliases")
+-- Setup all bard songs: lookup table, effects, triggers, and aliases
+for _, song in ipairs(bard_songs) do
+    -- Create lookup table entry
+    bard_songs_lookup[song.key] = song.spell
+    
+    -- Register effect
+    zEffects:addNewEffect(song.key, song.display, nil, 1, nil, nil, nil)
+    
+    -- Create trigger
+    local trigger_name = "luaBard" .. song.key .. "Off"
+    local trigger_pattern = "^Your " .. song.spell .. " spell is no longer affecting your songs\\.$"
+    local trigger_script = "effect_off('" .. song.key .. "')"
+    AddTriggerEx(trigger_name, trigger_pattern, trigger_script, trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
+    SetTriggerOption(trigger_name, "group", "Bard LUA Trigs")
+    
+    -- Create alias
+    local alias_name = "luaAliasBard" .. song.key
+    local alias_pattern = "^/" .. song.alias .. "$"
+    local alias_script = "castBardSpell('" .. song.key .. "')"
+    AddAlias(alias_name, alias_pattern, alias_script, aliasEnabledAndRegex, "")
+    SetAliasOption(alias_name, "send_to", sendto.script)
+    SetAliasOption(alias_name, "group", "Bard LUA Aliases")
+end
 
--- Add Bard spell casting alias
-AddAlias("luaAliasBardCha", "^/cha$", "castBardSpell('CHA')", aliasEnabledAndRegex,"")
-SetAliasOption("luaAliasBardCha", "send_to", sendto.script)
-SetAliasOption("luaAliasBardCha", "group", "Bard LUA Aliases")
-AddAlias("luaAliasBardInt", "^/int$", "castBardSpell('INT')", aliasEnabledAndRegex,"")
-SetAliasOption("luaAliasBardInt", "send_to", sendto.script)
-SetAliasOption("luaAliasBardInt", "group", "Bard LUA Aliases")
-AddAlias("luaAliasBardCon", "^/con$", "castBardSpell('CON')", aliasEnabledAndRegex,"")
-SetAliasOption("luaAliasBardCon", "send_to", sendto.script)
-SetAliasOption("luaAliasBardCon", "group", "Bard LUA Aliases")
-AddAlias("luaAliasBardWis", "^/wis$", "castBardSpell('WIS')", aliasEnabledAndRegex,"")
-SetAliasOption("luaAliasBardWis", "send_to", sendto.script)
-SetAliasOption("luaAliasBardWis", "group", "Bard LUA Aliases")
-AddAlias("luaAliasBardStr", "^/str$", "castBardSpell('STR')", aliasEnabledAndRegex,"")
-SetAliasOption("luaAliasBardStr", "send_to", sendto.script)
-SetAliasOption("luaAliasBardStr", "group", "Bard LUA Aliases")
-AddAlias("luaAliasBardDex", "^/dex$", "castBardSpell('DEX')", aliasEnabledAndRegex,"")
-SetAliasOption("luaAliasBardDex", "send_to", sendto.script)
-SetAliasOption("luaAliasBardDex", "group", "Bard LUA Aliases")
-AddAlias("luaAliasBardPsalm", "^/psalm$", "castBardSpell('PSALM')", aliasEnabledAndRegex,"")
-SetAliasOption("luaAliasBardPsalm", "send_to", sendto.script)
-SetAliasOption("luaAliasBardPsalm", "group", "Bard LUA Aliases")
+-- Guises
+zEffects:addNewEffect("bardGuise", "Guise of the Unknown", "guise", 1, nil, nil, nil)
+
+AddTriggerEx("luaBardGuiseDown",
+ "^You assume the shadowy guise of \\\"(Heavenly Angel|Mind Flayer|Halfling Scout|Mighty Titan|Repulsive Ogre|Noble Paladin|Cackling Skeleton)\\\"$",
+ "bard_guise_on(\"%1\")", trigFlags, custom_colour.Custom3, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaBardGuiseDown", "group", "Bard LUA Trigs")
+
+AddTriggerEx("luaBardGuiseOff",
+ "^Your guise wears off\\.$",
+ "effect_off('bardGuise')", trigFlags, custom_colour.Custom6, 0, "", "", sendto.script, 100)
+SetTriggerOption("luaBardGuiseOff", "group", "Bard LUA Trigs")
+
+AddAlias("luaAliasBardGuise", "^/guise (.*)$", "Execute(\"cast guise of the \" .. '%1')", aliasEnabledAndRegex, "")
+SetAliasOption("luaAliasBardGuise", "group", "Bard LUA Aliases")
+SetAliasOption("luaAliasBardGuise", "send_to", sendto.script)

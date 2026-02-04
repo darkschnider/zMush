@@ -20,7 +20,7 @@ zEffects:addNewGroup("skin", "Skin")
 
 -- Stun Protection Group
 zEffects:addNewEffect("stun_resistance", "Stun Resistance", "SR", 1, "stun", "Neverwhere wobbles around a bit\\.", "Your stun resistance wears off\\.")
-zEffects:addNewEffect("iron_will", "Iron Will", "IW", 1, "stun", "[A-Z][a-z]+ stares deep into your eyes, bolstering your concentration greatly\\.$|^You turn your mind inwards, enchanting yourself with an aura of rigid concentration\\.", "Your Iron Will wears off\\.")
+zEffects:addNewEffect("iron_will", "Iron Will", "IW", 1, "stun", "\\w+ stares deep into your eyes, bolstering your concentration greatly\\.$|^You turn your mind inwards, enchanting yourself with an aura of rigid concentration\\. ", "Your Iron Will wears off\\.")
 
 -- Flight
 zEffects:addNewEffect("flight", "Flight", "flight", 1, nil, "You become lighter than the air, wow you feel like you could fly!", "You feel a bit heavier\\.")
@@ -32,7 +32,7 @@ zEffects:addNewEffect("harmony_armour", "Harmony Armour", "HA", 1, nil, "You fee
 
 -- Mind Protection
 zEffects:addNewEffect("barrier_of_the_mind", "Barrier of the Mind", "barrier_of_the_mind", 1, nil, "You feel as if a protective barrier surrounds your fragile mind\\.", "You feel a slight tingle somewhere deep inside your mind\\.")
-zEffects:addNewEffect("force_shield", "Force Shield", "FS", 1, nil, "[A-Z][a-z]+ surrounds you with a telekinetic shield of force\\.", "The force shield dissipates\\.")
+zEffects:addNewEffect("force_shield", "Force Shield", "FS", 1, nil, "\\w+ surrounds you with a telekinetic shield of force\\.", "The force shield dissipates\\.")
 
 -- Unpain Group
 zEffects:addNewEffect("minor_unpain", "Minor Unpain", "MUP", 1, "unpain", "You feel more sturdy\\.", "You feel a little like crap\\.")
@@ -89,7 +89,7 @@ SetTriggerOption("neutralize_blade", "group", "Effect Definitions")
 zEffects:addNewEffect("slow_person", "Slow Person", "slow_person", 1, nil, "You feel like lagged\\.", "You no longer feel lagged\\.")
 zEffects:addNewEffect("glue", "Glue", "glue", 1, nil, "Your feet are covered with slimy matter\\.", "You can move again\\.")
 zEffects:addNewEffect("see_magic", "See Magic", "see_magic", 1, nil, "Your vision seems more sensitive\\.", "Your vision feels less sensitive\\.")
-zEffects:addNewEffect("shadow_shield", "Shadow Shield", "shadow_shield", 1, nil, "[A-Z][a-z]+ draws a protective circle in the air and shadows cover your body\\.$|You draw a protective circle in the air around yourself and shadows", "The shadows lift from your body\\.")
+zEffects:addNewEffect("shadow_shield", "Shadow Shield", "shadow_shield", 1, nil, "\\w+ draws a protective circle in the air and shadows cover your body\\.$|You draw a protective circle in the air around yourself and shadows", "The shadows lift from your body\\.")
 zEffects:addNewEffect("summon_orb_of_reflection", "Orb of Reflection", "summon_orb_of_reflection", 1, nil, "An orb of reflection appears in the room\\.", "You banish the orb back to chaos-continuum\\.")
 
 -- Magical Movement
@@ -99,11 +99,11 @@ zEffects:addNewEffect("sspirit", "Inner Spirit", "sspirit", 1, nil, "You open yo
 -- Combat States
 zEffects:addNewEffect("kamikaze", "Kamikaze", "kamikaze", 1, nil, "You start your Kamikaze attack!", "You calm down\\.")
 zEffects:addNewEffect("forget", "Forget", "forget", 1, nil, "You feel stoopid\\.|Lich assaults your mind, you feel excruciating pain\\.", "For some reason or another\\.\\. you feel smarter\\.")
-zEffects:addNewEffect("poison", "Poison", "poison", 1, nil, "You shiver and suffer as the POISON takes effect!", "[A-Z][a-z]+ neutralizes the poison in your veins\\.")
+zEffects:addNewEffect("poison", "Poison", "poison", 1, nil, "You shiver and suffer as the POISON takes effect!", "\\w+ neutralizes the poison in your veins\\.")
 
 -- Water Spells
-zEffects:addNewEffect("water_breathing", "Water Breathing", "wb", 1, nil, "[A-Z][a-z]+ puts a protective blue aura around your head\\.$|You put a protective blue aura around your head\\.", "You are no longer able to breathe underwater\\.")
-zEffects:addNewEffect("water_walking", "Water Walking", "ww", 1, nil, "([A-Z][a-z]+) looks a bit different\\.$|^You give ([A-Z][a-z]+) an ability to avoid water\\.", "You feel heavy\\.")
+zEffects:addNewEffect("water_breathing", "Water Breathing", "wb", 1, nil, "\\w+ puts a protective blue aura around your head\\.$|You put a protective blue aura around your head\\.", "You are no longer able to breathe underwater\\.")
+zEffects:addNewEffect("water_walking", "Water Walking", "ww", 1, nil, "(\\w+) looks a bit different\\.$|^You give (\\w+) an ability to avoid water\\.", "You feel heavy\\.")
 
 -- Nature Spells
 zEffects:addNewEffect("spirit_of_nature", "Spirit of Nature", "spirit_of_nature", 1, nil, "You feel (strong|nimble|tough) as (a|an) (bear|eagle|drake) as the spirit of the (forest|mountain|desert) strenghtens you!", "You suddenly feel cold as the presence leaves your body\\.")
@@ -221,3 +221,6 @@ zEffects:addNewEffect("shield_of_protection", "Shield of Protection", "SOP", 2, 
 
 -- Displacement
 zEffects:addNewEffect("displacement", "Displacement", "DISP", 2, nil, "[A-Z][a-z]+ displaces your image\\.$|^You displace ([A-Z][a-z]+)\\'s image\\.", "Your displacement wears off\\.")
+
+zEffects:addNewEffect("batform", "na-na-na-na-na-na-na-na-Batman!", "batform", 1, nil, "the transformation shakes your body, turning you into a bat\\.", "You close your wings around yourself, transforming back into a vampire\\.$|^Without warning, you suddenly transform back into a vampire\\.")
+zEffects:addNewEffect("coin", "Coin", "coin", 1, nil, "You catch the shining golden coin as it falls down: (tails|heads)","The golden coin does not seem to shine so brightly anymore\\.")

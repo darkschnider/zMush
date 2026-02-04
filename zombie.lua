@@ -33,10 +33,19 @@ SetVariable("party_commander", party_commander)
 SetVariable("target", "")
 SetVariable("healing", party_tank)
 
+function setHealTarget(name)
+    SetVariable("healing", name)
+    ColourNote("Grey", "Orange", "Healing target set to: " .. name)
+end
+DeleteAlias("luaSetHealingTarget")
+AddAlias("luaSetHealingTarget", "^/ht(.*)$", "setHealTarget(trim(\"%1\") == \"\" and \"neverwhere\" or trim(\"%1\"))", alias_flag.Enabled + alias_flag.RegularExpression, "")
+SetAliasOption("luaSetHealingTarget", "send_to", sendto.script)
+
 function setTank(name)
     party_tank = name
     SetVariable("party_tank", party_tank)
     ColourNote("Grey", "Orange", "Tank set to: " .. name)
+    setHealTarget(name)
 end
 
 function setCommander(name)
@@ -147,13 +156,17 @@ function doLoot(name, line, wildcards)
         Send("scom loot")
     else
         loot_to_bag = using_bag_of_holding or false
-        have_carriage = GetVariable("have_carriage")
-        Send("loot")
+        have_carriage = GetVariable("have_carriage") or false
+        isAbjurer = GetVariable("is_abjurer") or false
+        --Send("loot")
         if loot_to_bag then
             Send("put noeq in bag")
         end
-        if have_carriage == "1" then
-            Send("take corpse;put corpse in carriage")
+        if have_carriage == true then
+            Execute("take corpse;put corpse in carriage")
+        end
+        if isAbjurer == true then
+            on_enemy_killed_abjurer()
         end
     end
 end

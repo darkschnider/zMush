@@ -43,9 +43,7 @@ announce_status_r = " }=-"
 
 announce_other_command = "waagh"
 
-if GetAlias("luaAliasAnnounce") ~= eAliasNotFound then
-    DeleteAlias("luaAliasAnnounce")
-end
+DeleteAlias("luaAliasAnnounce")
 AddAlias("luaAliasAnnounce", "/announce", "toggle_announce()", alias_flag.Enabled, "")
 SetAliasOption("luaAliasAnnounce", "send_to", sendto.script)
 

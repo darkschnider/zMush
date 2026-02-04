@@ -4,7 +4,7 @@ require("add_effect")
 zEffects:addNewGroup("gravemist", "Gravemist")
 zEffects:addNewGroup("spectral_armour", "Spectral Armour")
 
-addNewSpellAndAlias("spec", "Spectral Armour", "spec_arm", "/sa (.*)", aliasEnabledAndRegex, nil, 1, "spectral_armour", ".* fades slightly out of view as its figure becomes ghostly, shimmering and translucent\\.", "The air around you is calm once more as the wavering stops\\.")
+--addNewSpellAndAlias("spec", "Spectral Armour", "spec_arm", "/sa (.*)", aliasEnabledAndRegex, nil, 1, "spectral_armour", ".* fades slightly out of view as its figure becomes ghostly, shimmering and translucent\\.", "The air around you is calm once more as the wavering stops\\.")
 
 
 addNewSpellAndAlias("ddecay", "Diminish Decay", "ddecay", "/dd (.*)", aliasEnabledAndRegex, nil, 1, nil, "You channel some of your deathless essence into .*, bolstering its undead body and its ability to regenerate\\.", "You feel slightly worse as the decay tightens its hold on you\\.")

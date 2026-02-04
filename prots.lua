@@ -278,12 +278,24 @@ function greater_party_heal()
     do_prot({a = "cast", s = "greater party heal", n = "Greater Party Heal"})
 end
 
+function half_heal(target_arg)
+    do_prot({a = "cast", s = "half heal", t = target_arg ~= "" and target_arg or GetVariable("healing") or "", n = "Half Heal"})
+end
+
 function harmonious_barrier(target_arg)
     do_prot({a = "cast", s = "harmonious barrier", t = target_arg ~= "" and target_arg or GetVariable("healing") or ""})
 end
 
 function harmony_armour(target_arg)
     do_prot({a = "cast", s = "harmony armour", t = target_arg ~= "" and target_arg or GetVariable("healing") or ""})
+end
+
+function heal(target_arg)
+    do_prot({a = "cast", s = "heal", t = target_arg ~= "" and target_arg or GetVariable("healing") or "", n = "Healing"})
+end
+
+function heal_body(target_arg)
+    do_prot({a = "cast", s = "heal body", t = target_arg ~= "" and target_arg or GetVariable("healing") or "", n = "Heal Body"})
 end
 
 function healing_ceremony()

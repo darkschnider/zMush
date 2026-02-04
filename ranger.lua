@@ -243,8 +243,8 @@ for i, bm_skill in ipairs(beastmastery_skills) do
     SetTriggerOption(bm_trigger_name, "group", "Ranger LUA Triggers")
 end
 
-addEffectToCheck("eyes_marksman")
-addEffectToCheck("spirit_of_nature")
+--addEffectToCheck("eyes_of_the_marksman")
+--addEffectToCheck("spirit_of_nature")
 
 function do_beastspeak(what_to_say)
     Send("speak beastspeak")
